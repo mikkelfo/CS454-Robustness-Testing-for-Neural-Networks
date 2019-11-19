@@ -1,4 +1,10 @@
-# -*- coding: utf-8 -*-
+# change coordinates to an array of tuples instead of just an array
+# make a function to get the center point. make sure the shape can't go out of bounds
+# define and write the mutation function
+# make sure the RGB values doesn't go ovr 255 or under 0
+# shape should only have the RGB values changed and mask should have amount of pixels changed
+# changed the point to be absolute instead of relative
+
 import numpy as np
 import random
 
@@ -23,7 +29,7 @@ class shape:
         self.RGBValues = RGBValues
         self.change = 0
         
-    #Only works if points are arranged in shortest way
+    #This needs to be replaced or we need to sort the points
     def polygonArea(self):
         x = self.points[0::2]
         y = self.points[1::2]
@@ -43,7 +49,7 @@ def getRandomPoints(size, maxPoints):
     points = []
     for i in range(0, nrOfPoints):
         x = random.randint(-size/2,(size/2))
-        y = random.randint(-size/2,(size/2))
+        y = random.randint(-size/2,(size/2))        
         points.append(x)
         points.append(y)
     return points
@@ -76,41 +82,9 @@ def initPopulation(popSize, maxShapes, shapeSize, maxPoints, imageSize):
 
     return population
 
-
 def crossover(parent1, parent2):
-    children = []
-    parent1cut1 = random.randint(0,len(parent1.shapes))
-    parent1cut2 = random.randint(0,len(parent1.shapes))
-    while parent1cut1 == parent1cut2:
-        parent1cut2 = random.randint(0,len(parent1.shapes))
-    parent2cut1 = random.randint(0,len(parent2.shapes))
-    parent2cut2 = random.randint(0,len(parent2.shapes))
-    while parent2cut1 == parent2cut2:
-        parent2cut2 = random.randint(0,len(parent2.shapes))
-    tempChild = []
-    
-    tempChild = getChild(parent1cut1, parent1cut2, parent2cut1, parent2cut2, parent1, parent2)    
-    children.append(tempChild)
-    tempChild = getChild(parent2cut1, parent2cut2, parent1cut1, parent1cut2, parent2, parent1)    
-    children.append(tempChild)
-
-    return children
-
-def getChild(parent1cut1, parent1cut2, parent2cut1, parent2cut2, parent1, parent2):
-    tempChild = []
-    for i in range(0, parent1cut1):
-        tempChild.append(parent1.shapes[i])
-    for i in range(parent2cut1, parent2cut2):
-        tempChild.append(parent2.shapes[i])
-    for i in range(parent1cut2, len(parent1.shapes)):
-        tempChild.append(parent1.shapes[i])
-    tempChild = mask(tempChild)
-    tempChild.getMaskChange()
-    return tempChild
-
-def crossover2(parent1, parent2):
-    nr1 = random.randint(0,len(parent1.shapes))
-    nr2 = random.randint(0,len(parent2.shapes))
+    nr1 = random.randint(1,len(parent1.shapes))
+    nr2 = random.randint(1,len(parent2.shapes))
     
     child = []
     temp1 = random.sample(parent1.shapes, nr1)
@@ -122,9 +96,11 @@ def crossover2(parent1, parent2):
     child = mask(child)
     return child
 
-def mutation(mutationrate):
-    if random.random() < 0.2:
-        #mutate something, everything, always only kone thing?
+#def mutation(mutationrate):
+#   we can mutate center position, shape and rgb values. one or all three can be mutated.
+#   centerpoint is mutated by randomising a new point
+#   shape is mutated by either removing or adding x points
+#   rgb values can either decrease or increase with value y. all or only one value can be changed. (roll to see how many values, then again to see which values)
 
 populationSize = 10
 maxShapes = 20
