@@ -1,5 +1,5 @@
 import random
-from scipy.spatial import ConvexHull, Delaunay
+from scipy.spatial import Delaunay
 
 from operator import itemgetter
 def createRandomPoint():
@@ -15,9 +15,12 @@ class Mask:
     def initShapes():
         return []
 
-    def calculateFitness(self):
+    def calculateFitness(self, c1, c2, c3):
         for shape in self.listOfShapes:
-            fitness = len(shape.area) + sum([abs(x) for x in shape.changeRGB]) + self.accuracy
+            area = len(shape.area)
+            rgb = len(shape.area) + sum([abs(x) for x in shape.changeRGB])
+            acc = self.accuracy
+            fitness = c1*area + c2*rgb + c3*acc
         return
 
 class Shape:
