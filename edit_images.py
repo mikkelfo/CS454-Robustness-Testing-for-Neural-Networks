@@ -16,10 +16,10 @@ def get_img(file, i):
 def show_img(img):
     Image.fromarray(img, 'RGB').show()
 
-
-batch = load_data("data_batch_1")
-
-image = get_img(batch, 1)
-
-show_img(image)
+# TODO: check overflow
+def apply_mask(img, inside_points, mask):
+    img = img.astype(int)
+    for x, y in inside_points:
+        img[y][x] = img[y][x] + mask
+    return img
 
