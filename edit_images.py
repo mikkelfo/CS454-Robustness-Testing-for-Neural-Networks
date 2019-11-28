@@ -16,10 +16,20 @@ def get_img(file, i):
 def show_img(img):
     Image.fromarray(img, 'RGB').show()
 
-# TODO: check overflow
 def apply_mask(img, inside_points, mask):
-    img = img.astype(int)
     for x, y in inside_points:
-        img[y][x] = img[y][x] + mask
+        img[y][x] = boundary(img[y][x] + mask)
+
     return img
+
+def boundary(pixels):
+    new_array = []
+    for val in pixels:
+        if val not in range(0,255):
+            if val < 0:
+                val = 0
+            elif val > 255:
+                val = 255
+        new_array.append(val)
+    return new_array
 
