@@ -97,7 +97,28 @@ def crossover(parent1, parent2):
     child = mask(child)
     return child
 
-#def mutation(mutationrate):
+def mutation(mutationrate):
+    changeShape = False
+    changeCenpoint = False
+    changeRGB = False
+
+    # Decide how many things will be mutated
+    numOfMut = random.randint(1, 3)
+
+    num_set = {1, 2, 3}
+
+    # Pull out the things that will be mutated and set their value to 'True'
+    choice_set = random.sample(num_set, numOfMut)
+
+    if 1 in choice_set:
+        changeShape = True
+    if 2 in choice_set:
+        changeCenpoint = True
+    if 3 in choice_set:
+        changeRGB = True
+
+
+
 #   we can mutate center position, shape and rgb values. one or all three can be mutated.
 #   centerpoint is mutated by randomising a new point
 #   shape is mutated by either removing or adding x points (and moving?)
@@ -109,7 +130,9 @@ shapeSize = 25
 maxPoints = 8
 imageSize = 256
 
+# mutation(2)
+
 pop = initPopulation(populationSize, maxShapes, shapeSize, maxPoints, imageSize)
 for i in range(0,len(pop)):
-    print("Change of the mask: %8.3f Number of shapes in the mask: %d" %(pop[i].change, len(pop[i].shapes)))
+     print("Change of the mask: %8.3f Number of shapes in the mask: %d" %(pop[i].change, len(pop[i].shapes)))
 
