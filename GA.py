@@ -42,7 +42,7 @@ def crossover(parent1, parent2):
     return Mask(child)
 
 
-def mutation(mutationrate):
+def mutation(shape):
     changeShape = False
     changeCenpoint = False
     changeRGB = False
@@ -61,6 +61,17 @@ def mutation(mutationrate):
         changeCenpoint = True
     if 3 in choice_set:
         changeRGB = True
+
+        # if changeShape:
+        #   shape = changeShape()
+
+        if changeCenpoint:
+          shapeMut.center = createRandomPoint()
+
+        # if changerRGB:
+        #   shapeMut = changeRQB()
+
+    return shapeMut
 
 
 #   we can mutate center position, shape and rgb values. one or all three can be mutated.

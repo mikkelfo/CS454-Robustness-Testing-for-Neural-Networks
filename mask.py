@@ -4,10 +4,6 @@ from scipy.spatial import Delaunay
 from operator import itemgetter
 
 
-def createRandomPoint():
-    return
-
-
 class Mask:
     def __init__(self, shapes):
         self.shapes = shapes
