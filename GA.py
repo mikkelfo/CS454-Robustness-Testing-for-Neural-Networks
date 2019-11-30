@@ -42,6 +42,7 @@ def crossover(parent1, parent2):
     return Mask(child)
 
 
+# Mutation, when called, will always mutate at least ONE thing and up to three.
 def mutation(shape):
 
     # Decide how many things will be mutated
@@ -52,22 +53,29 @@ def mutation(shape):
     # Pull out the things that will be mutated and set their value to 'True'
     choiceSet = random.sample(numSet, numOfMut)
 
-    # if 1 in choiceSet:
-    #     # shape.listOfPoints
+    # Mutate shape by moving a point
+    if 1 in choiceSet:
+        shape.listOfPoints.pop(random.randrange(len(shape.listOfPoints)))
+        shape.listOfPoints.append(shape.createRandomPoint())
 
-    # if 2 in choiceSet:
-    #     shape.center = shape.createRandomPoint()
+    # Mutate shape position by moving centerpoint.
+    if 2 in choiceSet:
+        shape.center = shape.createRandomPoint()
 
+    # Mutate RGB-values. Between 1-3 RGB-values will be changed.
     if 3 in choiceSet:
         RGBRange = 20
         RBGToChangeSet = random.sample(numSet, numOfMut)
 
+        # R
         if 1 in RBGToChangeSet:
             shape.changeRGB[0] = legalRGBValue(shape.changeRGB[0], RGBRange)
 
+        # G
         if 2 in RBGToChangeSet:
             shape.changeRGB[1] = legalRGBValue(shape.changeRGB[1], RGBRange)
 
+        # B
         if 3 in RBGToChangeSet:
             shape.changeRGB[2] = legalRGBValue(shape.changeRGB[2], RGBRange)
 
