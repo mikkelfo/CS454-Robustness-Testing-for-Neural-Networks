@@ -84,11 +84,11 @@ for i in range(0, len(pop)):
     print("Change of the mask: %8.3f Number of shapes in the mask: %d" %
           (pop[i].getMaskChange(), len(pop[i].shapes)))
 
-#new_pop = []
-#for i in pop:
-#    selection = random.sample(pop, 2)
-#    new_pop.append(crossover(selection[0], selection[1]))
+new_pop = []
+for i in pop:
+    selection = random.sample(pop, 2)
+    new_pop.append(crossover(selection[0], selection[1]))
 
-#for i in range(0, len(new_pop)):
-#    print("Change of the mask: %8.3f Number of shapes in the mask: %d" %
-#          (new_pop[i].getMaskChange(), len(new_pop[i].shapes)))
+for i in range(0, len(new_pop)):
+    print("Change of the mask: %8.3f Number of shapes in the mask: %d" %
+          (new_pop[i].getMaskChange(), len(new_pop[i].shapes)))
