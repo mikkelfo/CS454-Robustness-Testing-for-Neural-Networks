@@ -43,9 +43,6 @@ def crossover(parent1, parent2):
 
 
 def mutation(shape):
-    changeShape = False
-    changeCenpoint = False
-    changeRGB = False
 
     # Decide how many things will be mutated
     numOfMut = random.randint(1, 3)
@@ -55,24 +52,14 @@ def mutation(shape):
     # Pull out the things that will be mutated and set their value to 'True'
     choice_set = random.sample(num_set, numOfMut)
 
-    if 1 in choice_set:
-        changeShape = True
+    # if 1 in choice_set:
+    #     # shape.listOfPoints
+
     if 2 in choice_set:
-        changeCenpoint = True
-    if 3 in choice_set:
-        changeRGB = True
+        shape.center = shape.createRandomPoint()
 
-        # if changeShape:
-        #   shape = changeShape()
-
-        if changeCenpoint:
-          shapeMut.center = createRandomPoint()
-
-        # if changerRGB:
-        #   shapeMut = changeRQB()
-
-    return shapeMut
-
+    # if 3 in choice_set:
+    #     # shapeMut = changeRQB()
 
 #   we can mutate center position, shape and rgb values. one or all three can be mutated.
 #   centerpoint is mutated by randomising a new point
@@ -85,8 +72,8 @@ maxShapes = 20
 shapeSize = 25
 maxPoints = 8
 imageSize = 256
+mutationRate = 0.02
 
-# mutation(2)
 
 pop = initPopulation(populationSize, maxShapes,
                      shapeSize, maxPoints, imageSize)
@@ -98,7 +85,12 @@ for i in range(0, len(pop)):
 new_pop = []
 for i in pop:
     selection = random.sample(pop, 2)
-    new_pop.append(crossover(selection[0], selection[1]))
+    childMask = crossover(selection[0], selection[1])
+    # for shape in childMask.shapes:
+    #     if random.random() < mutationRate:
+    #         mutation(shape)
+
+    new_pop.append(childMask)
 
 for i in range(0, len(new_pop)):
     print("Change of the mask: %8.3f Number of shapes in the mask: %d" %

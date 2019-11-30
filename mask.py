@@ -98,12 +98,24 @@ class Shape:
                     points.append(t)
         return len(points)
 
+    # Calculates shape change for fitness
     def shapeChange(self, changeRGB, area):
         absChange = 0
         for i in changeRGB:
             absChange += abs(i)
         return area + absChange
 
+    # Gets the change value from the shape
     def getShapeChange(self):
         self.change = self.shapeChange(self.changeRGB, self.area)
         return self.change
+
+    # Moves the shape to a specified centerpoint and moves all other points to by in the same position
+    # relative to the new point.
+    def moveShapeByCenter(self, newCenPoint):
+        xDiff = newCenPoint.centerPoint[0] - self.centerPoint[0]
+        yDiff = newCenPoint.centerPoint[1] - self.centerPoint[1]
+
+        for point in self.listOfPoints:
+            if 0 <= point[0] + xDiff < 299:
+                point[0] += xDiff
