@@ -109,13 +109,3 @@ class Shape:
     def getShapeChange(self):
         self.change = self.shapeChange(self.changeRGB, self.area)
         return self.change
-
-    # Moves the shape to a specified centerpoint and moves all other points to by in the same position
-    # relative to the new point. NOT DONE
-    def moveShapeByCenter(self, newCenPoint):
-        xDiff = newCenPoint.centerPoint[0] - self.centerPoint[0]
-        yDiff = newCenPoint.centerPoint[1] - self.centerPoint[1]
-
-        for point in self.listOfPoints:
-            if 0 <= point[0] + xDiff < 299:
-                point[0] += xDiff
