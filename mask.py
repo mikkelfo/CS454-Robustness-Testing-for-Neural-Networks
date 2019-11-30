@@ -56,8 +56,8 @@ class Shape:
 
         try:
             Delaunay(points)
-        except ValueError():
-            return k.initPoints(k, diff)
+        except:
+            return self.initPoints(k, diff)
 
         return points
 
