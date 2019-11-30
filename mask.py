@@ -111,7 +111,7 @@ class Shape:
         return self.change
 
     # Moves the shape to a specified centerpoint and moves all other points to by in the same position
-    # relative to the new point.
+    # relative to the new point. NOT DONE
     def moveShapeByCenter(self, newCenPoint):
         xDiff = newCenPoint.centerPoint[0] - self.centerPoint[0]
         yDiff = newCenPoint.centerPoint[1] - self.centerPoint[1]

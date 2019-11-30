@@ -47,19 +47,45 @@ def mutation(shape):
     # Decide how many things will be mutated
     numOfMut = random.randint(1, 3)
 
-    num_set = {1, 2, 3}
+    numSet = {1, 2, 3}
 
     # Pull out the things that will be mutated and set their value to 'True'
-    choice_set = random.sample(num_set, numOfMut)
+    choiceSet = random.sample(numSet, numOfMut)
 
-    # if 1 in choice_set:
+    # if 1 in choiceSet:
     #     # shape.listOfPoints
 
-    if 2 in choice_set:
-        shape.center = shape.createRandomPoint()
+    # if 2 in choiceSet:
+    #     shape.center = shape.createRandomPoint()
 
-    # if 3 in choice_set:
-    #     # shapeMut = changeRQB()
+    if 3 in choiceSet:
+        RGBRange = 20
+        RBGToChangeSet = random.sample(numSet, numOfMut)
+
+        if 1 in RBGToChangeSet:
+            shape.changeRGB[0] = legalRGBValue(shape.changeRGB[0], RGBRange)
+
+        if 2 in RBGToChangeSet:
+            shape.changeRGB[1] = legalRGBValue(shape.changeRGB[1], RGBRange)
+
+        if 3 in RBGToChangeSet:
+            shape.changeRGB[2] = legalRGBValue(shape.changeRGB[2], RGBRange)
+
+
+def legalRGBValue(RGBValue, RGBRange):
+    rDiffFromMax = abs(RGBValue - 255)
+    rDiffFromMin = abs(RGBValue + 255)
+    smallestDiff = min(rDiffFromMax, rDiffFromMin)
+
+    if smallestDiff >= RGBRange / 2:
+        RGBValue += random.randint(-RGBRange / 2, RGBRange / 2)
+    elif rDiffFromMax < RGBRange / 2:
+        RGBValue += random.randint(-RGBRange / 2, rDiffFromMax)
+    elif rDiffFromMin < RGBRange / 2:
+        RGBValue += random.randint(-rDiffFromMin, RGBRange / 2)
+
+    return RGBValue
+
 
 #   we can mutate center position, shape and rgb values. one or all three can be mutated.
 #   centerpoint is mutated by randomising a new point
