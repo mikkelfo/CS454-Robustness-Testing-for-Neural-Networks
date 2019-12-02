@@ -7,6 +7,7 @@
 # keep the points relative
 
 import random
+from numpy.random import choice
 
 from mask import *
 
@@ -42,32 +43,40 @@ def crossover(parent1, parent2):
     return Mask(child)
 
 
-# Mutation, when called, will always mutate at least ONE thing and up to three.
+# Mutation, when called, will always mutate at least ONE thing and up to five.
 def mutation(shape):
-
     # Decide how many things will be mutated
-    numOfMut = random.randint(1, 3)
+    numOfMut = random.randint(1, 1)
 
-    numSet = {1, 2, 3}
+    numSet = [1, 2, 3, 4, 5]
 
     # Pull out the things that will be mutated
-    choiceSet = random.sample(numSet, numOfMut)
+    choiceSet = choice(numSet, numOfMut, replace=False,
+                       p=[0, 0, 0, 1, 0])  # <-Change probabilities here
 
     # Mutate shape by moving a point
-    # It removes, adds or both, but only one of them. Check is a shape has three points before removing.
     if 1 in choiceSet:
         shape.listOfPoints.pop(random.randrange(len(shape.listOfPoints)))
         shape.listOfPoints.append(shape.createRandomPoint())
 
-    # Mutate shape position by moving centerpoint. Change to numpy array and add shift value. Move centerpoint by +-10
+    # Mutate shape by adding a point
     if 2 in choiceSet:
-        shape.center = shape.createRandomPoint()
+        shape.listOfPoints.append(shape.createRandomPoint())
+
+    # Mutate shape by removing a point
+    if 3 in choiceSet:
+        shape.listOfPoints.pop(random.randrange(len(shape.listOfPoints)))
+
+    # Mutate shape position by moving centerpoint. Change to numpy array and add shift value. Move centerpoint by +-10
+    if 4 in choiceSet:
+        shape.moveShape(30)
 
     # Mutate RGB-values. Between 1-3 RGB-values will be changed.
-    if 3 in choiceSet:
+    if 5 in choiceSet:
+        numRGBSet = {1, 2, 3}
         numOfRGBMut = random.randint(1, 3)
         RGBRange = 20
-        RBGToChangeSet = random.sample(numSet, numOfRGBMut)
+        RBGToChangeSet = random.sample(numRGBSet, numOfRGBMut)
 
         # Mutate R
         if 1 in RBGToChangeSet:
@@ -82,17 +91,20 @@ def mutation(shape):
             shape.changeRGB[2] = legalRGBValue(shape.changeRGB[2], RGBRange)
 
 
+# Returns a RGB value that is within the given range. If RGB is close to min or max, the function
+# will dynamically adjust. Example if value is 253 and range is 20, the function will pick random number between
+# [-18, 2] as to not go out of bounds.
 def legalRGBValue(RGBValue, RGBRange):
     rDiffFromMax = abs(RGBValue - 255)
-    rDiffFromMin = abs(RGBValue + 255)
+    rDiffFromMin = abs(RGBValue + 255) - 255
     smallestDiff = min(rDiffFromMax, rDiffFromMin)
 
     if smallestDiff >= RGBRange / 2:
         RGBValue += random.randint(-RGBRange / 2, RGBRange / 2)
     elif rDiffFromMax < RGBRange / 2:
-        RGBValue += random.randint(-RGBRange / 2, rDiffFromMax)
+        RGBValue += random.randint((-RGBRange / 2) - ((RGBRange/2) - rDiffFromMax), rDiffFromMax)
     elif rDiffFromMin < RGBRange / 2:
-        RGBValue += random.randint(-rDiffFromMin, RGBRange / 2)
+        RGBValue += random.randint(-rDiffFromMin, (RGBRange / 2) + ((RGBRange/2) - rDiffFromMin))
 
     return RGBValue
 
@@ -110,7 +122,6 @@ maxPoints = 8
 imageSize = 256
 mutationRate = 0.02
 
-
 pop = initPopulation(populationSize, maxShapes,
                      shapeSize, maxPoints, imageSize)
 
@@ -122,9 +133,9 @@ new_pop = []
 for i in pop:
     selection = random.sample(pop, 2)
     childMask = crossover(selection[0], selection[1])
-    # for shape in childMask.shapes:
-    #     if random.random() < mutationRate:
-    #         mutation(shape)
+    for shape in childMask.shapes:
+        if random.random() < mutationRate:
+            mutation(shape)
 
     new_pop.append(childMask)
 

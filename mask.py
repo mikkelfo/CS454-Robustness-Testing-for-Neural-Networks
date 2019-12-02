@@ -110,3 +110,21 @@ class Shape:
     def getShapeChange(self):
         self.change = self.shapeChange(self.changeRGB, self.area)
         return self.change
+
+    # Moves the shape to random place within the specified limit
+    def moveShape(self, limit):
+        xShift = random.randint(-limit, limit)
+        yShift = random.randint(-limit, limit)
+
+        evaluationList = self.listOfPoints + (xShift, yShift)
+        evaluationCenter = (self.centerPoint[0] + xShift, self.centerPoint[1] + yShift)
+
+        # Checks if new points are within the picture
+        if evaluationList.max() not in range(0, self.dim) or evaluationList.min() not in range(0, self.dim):
+            return self.moveShape(limit)
+
+        if evaluationCenter[0] not in range(0, self.dim) or evaluationCenter[1] not in range(0, self.dim):
+            return self.moveShape(limit)
+
+        self.centerPoint = (self.centerPoint[0] + xShift, self.centerPoint[1] + yShift)
+        self.listOfPoints += (xShift, yShift)
