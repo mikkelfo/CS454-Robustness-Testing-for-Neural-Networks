@@ -58,7 +58,7 @@ def get_images():
     for i in range(number_of_images):
         processed_image = preprocess(images[i], 299, 299)
         original_images[i] = processed_image
-	return original_images
+    return original_images
 	
 def load_model():
     inception = keras.models.load_model('neuralNetwork/inceptionv3_base_model.hdf5', compile=False)
@@ -81,7 +81,7 @@ def fitness_value(inception_model, masked_images):
         processed_images[i] = processed_image
 	
     #classify
-    classes = inception.predict(processed_images)
+    classes = inception_model.predict(processed_images)
     class_numbers = np.argmax(classes, 1)
-	accuracy = get_accuracy(val_labels, class_numbers)
+    accuracy = get_accuracy(val_labels, class_numbers)
     return accuracy

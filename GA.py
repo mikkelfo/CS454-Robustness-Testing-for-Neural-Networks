@@ -18,7 +18,7 @@ def initPopulation(popSize, maxShapes, shapeSize, maxPoints, imageSize):
         shapes = []
         for j in range(0, nrOfShapes):
             # change to passing random amount of points 3 to max
-            shapes.append(Shape(random.randint(3, maxPoints)))
+            shapes.append(Shape(random.randint(2, maxPoints)))
 
         # get the shapes into mask using new function
         population.append(Mask(shapes))
@@ -54,6 +54,7 @@ def mutation(shape):
     choiceSet = random.sample(numSet, numOfMut)
 
     # Mutate shape by moving a point
+    # It removes, adds or both, but only one of them. Check is a shape has three points before removing.
     if 1 in choiceSet:
         shape.listOfPoints.pop(random.randrange(len(shape.listOfPoints)))
         shape.listOfPoints.append(shape.createRandomPoint())
