@@ -32,7 +32,7 @@ class Mask:
 
 
 class Shape:
-    def __init__(self, k, dim=96):
+    def __init__(self, k, dim=299):
         assert dim > 0
         self.dim = dim
         # If changing centerPoint, we also need to change listOfPoints
@@ -61,7 +61,7 @@ class Shape:
 
         return points
 
-    def createRandomPoint(self, diff=10):
+    def createRandomPoint(self, diff=30):
         xc, yc = self.centerPoint
         xr, yr = [xc - diff, xc + diff], [yc - diff, yc + diff]
 

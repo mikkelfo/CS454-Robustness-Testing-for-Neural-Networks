@@ -79,7 +79,7 @@ def fitness_value(inception_model, masked_images):
     for i in range(number_of_images):
         processed_image = preprocess_for_eval(masked_images[i])
         processed_images[i] = processed_image
-	
+
     #classify
     classes = inception_model.predict(processed_images)
     class_numbers = np.argmax(classes, 1)

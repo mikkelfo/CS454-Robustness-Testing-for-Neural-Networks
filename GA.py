@@ -50,7 +50,7 @@ def mutation(shape):
 
     numSet = {1, 2, 3}
 
-    # Pull out the things that will be mutated and set their value to 'True'
+    # Pull out the things that will be mutated
     choiceSet = random.sample(numSet, numOfMut)
 
     # Mutate shape by moving a point
@@ -68,15 +68,15 @@ def mutation(shape):
         RGBRange = 20
         RBGToChangeSet = random.sample(numSet, numOfMut)
 
-        # R
+        # Mutate R
         if 1 in RBGToChangeSet:
             shape.changeRGB[0] = legalRGBValue(shape.changeRGB[0], RGBRange)
 
-        # G
+        # Mutate G
         if 2 in RBGToChangeSet:
             shape.changeRGB[1] = legalRGBValue(shape.changeRGB[1], RGBRange)
 
-        # B
+        # Mutate B
         if 3 in RBGToChangeSet:
             shape.changeRGB[2] = legalRGBValue(shape.changeRGB[2], RGBRange)
 
