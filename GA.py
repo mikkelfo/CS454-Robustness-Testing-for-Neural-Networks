@@ -46,32 +46,33 @@ def crossover(parent1, parent2):
 # Mutation, when called, will always mutate at least ONE thing and up to five.
 def mutation(shape):
     # Decide how many things will be mutated
-    numOfMut = random.randint(1, 1)
+    numOfMut = random.randint(1, 5)
 
     numSet = [1, 2, 3, 4, 5]
 
     # Pull out the things that will be mutated
     choiceSet = choice(numSet, numOfMut, replace=False,
-                       p=[0, 0, 0, 1, 0])  # <-Change probabilities here
+                       p=[0.2, 0.2, 0.2, 0.2, 0.2])  # <-Change probabilities here
 
-    # Mutate shape by moving a point
+    # Moves a point
     if 1 in choiceSet:
-        shape.listOfPoints.pop(random.randrange(len(shape.listOfPoints)))
-        shape.listOfPoints.append(shape.createRandomPoint())
+        shape.listOfPoints = np.delete(shape.listOfPoints, random.randrange(len(shape.listOfPoints)), 0)
+        shape.listOfPoints = np.vstack([shape.listOfPoints, shape.createRandomPoint()])
 
-    # Mutate shape by adding a point
+    # Adding a point
     if 2 in choiceSet:
-        shape.listOfPoints.append(shape.createRandomPoint())
+        shape.listOfPoints = np.vstack([shape.listOfPoints, shape.createRandomPoint()])
 
-    # Mutate shape by removing a point
+    # Removes a point
     if 3 in choiceSet:
-        shape.listOfPoints.pop(random.randrange(len(shape.listOfPoints)))
+        if len(shape.listOfPoints) > 3:
+            shape.listOfPoints = np.delete(shape.listOfPoints, random.randrange(len(shape.listOfPoints)), 0)
 
-    # Mutate shape position by moving centerpoint. Change to numpy array and add shift value. Move centerpoint by +-10
+    # Moves centerpoint within limit.
     if 4 in choiceSet:
         shape.moveShape(30)
 
-    # Mutate RGB-values. Between 1-3 RGB-values will be changed.
+    # Mutates RGB-values. Between 1-3 RGB-values will be changed.
     if 5 in choiceSet:
         numRGBSet = {1, 2, 3}
         numOfRGBMut = random.randint(1, 3)
@@ -107,12 +108,6 @@ def legalRGBValue(RGBValue, RGBRange):
         RGBValue += random.randint(-rDiffFromMin, (RGBRange / 2) + ((RGBRange/2) - rDiffFromMin))
 
     return RGBValue
-
-
-#   we can mutate center position, shape and rgb values. one or all three can be mutated.
-#   centerpoint is mutated by randomising a new point
-#   shape is mutated by either removing or adding x points (and moving?)
-#   rgb values can either decrease or increase with value y. all or only one value can be changed. (roll to see how many values, then again to see which values)
 
 
 populationSize = 10
