@@ -59,7 +59,7 @@ def mutation(shape):
         shape.listOfPoints.pop(random.randrange(len(shape.listOfPoints)))
         shape.listOfPoints.append(shape.createRandomPoint())
 
-    # Mutate shape position by moving centerpoint.
+    # Mutate shape position by moving centerpoint. Change to numpy array and add shift value.
     if 2 in choiceSet:
         shape.center = shape.createRandomPoint()
 

@@ -1,4 +1,5 @@
 import random
+import numpy as np
 from scipy.spatial import Delaunay
 
 from operator import itemgetter
@@ -37,7 +38,7 @@ class Shape:
         self.dim = dim
         # If changing centerPoint, we also need to change listOfPoints
         self.centerPoint = self.initCenter()
-        self.listOfPoints = self.initPoints(k)
+        self.listOfPoints = np.array(self.initPoints(k))
         self.changeRGB = self.initRGB()
         self.area = self.area()
         self.change = self.shapeChange(self.changeRGB, self.area)
