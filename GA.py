@@ -59,14 +59,15 @@ def mutation(shape):
         shape.listOfPoints.pop(random.randrange(len(shape.listOfPoints)))
         shape.listOfPoints.append(shape.createRandomPoint())
 
-    # Mutate shape position by moving centerpoint. Change to numpy array and add shift value.
+    # Mutate shape position by moving centerpoint. Change to numpy array and add shift value. Move centerpoint by +-10
     if 2 in choiceSet:
         shape.center = shape.createRandomPoint()
 
     # Mutate RGB-values. Between 1-3 RGB-values will be changed.
     if 3 in choiceSet:
+        numOfRGBMut = random.randint(1, 3)
         RGBRange = 20
-        RBGToChangeSet = random.sample(numSet, numOfMut)
+        RBGToChangeSet = random.sample(numSet, numOfRGBMut)
 
         # Mutate R
         if 1 in RBGToChangeSet:
