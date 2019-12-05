@@ -4,22 +4,21 @@ from scipy.spatial import Delaunay
 
 from operator import itemgetter
 
+import fitnessfunction as fitAcc
 
 class Mask:
     def __init__(self, shapes):
         self.shapes = shapes
-        fitness = 0
-        self.accuracy = 0
-        # use self.shapes or shapes?
+        self.fitness = self.calculateFitness(1,1)
+        self.accuracy = fitAcc.fitness_value()
         self.change = self.maskChange(shapes)
 
-    # def calculateFitness(self, c1, c2, c3):
-    #     for shape in self.listOfShapes:
-    #         area = len(shape.area)
-    #         rgb = len(shape.area) + sum([abs(x) for x in shape.changeRGB])
-    #         acc = self.accuracy
-    #         fitness = c1 * area + c2 * rgb + c3 * acc
-    #     return fitness
+    def calculateFitness(self, c1, c2):
+         for shape in self.shapes:
+             change = len(shape.change)
+             acc = self.accuracy
+             fitness = c1 * change + c2 * acc
+         return fitness
 
     def maskChange(self, shapes):
         value = 0
