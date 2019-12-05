@@ -8,8 +8,9 @@
 
 import random
 from numpy.random import choice
+import numpy as np
 
-from mask import *
+import mask as m
 
 
 def initPopulation(popSize, maxShapes, shapeSize, maxPoints, imageSize):
@@ -19,10 +20,10 @@ def initPopulation(popSize, maxShapes, shapeSize, maxPoints, imageSize):
         shapes = []
         for j in range(0, nrOfShapes):
             # change to passing random amount of points 3 to max
-            shapes.append(Shape(random.randint(2, maxPoints)))
+            shapes.append(m.Shape(random.randint(2, maxPoints)))
 
         # get the shapes into mask using new function
-        population.append(Mask(shapes))
+        population.append(m.Mask(shapes))
 
     return population
 
@@ -40,7 +41,7 @@ def crossover(parent1, parent2):
         child.append(i)
 
     # get children shapes into mask
-    return Mask(child)
+    return m.Mask(child)
 
 
 # Mutation, when called, will always mutate at least ONE thing and up to five.
