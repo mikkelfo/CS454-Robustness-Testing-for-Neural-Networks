@@ -8,11 +8,12 @@ class Mask:
         self.change = self.maskChange(shapes)
 
     def calculateFitness(self, c1, c2):
-         for shape in self.shapes:
-             change = len(shape.change)
-             acc = self.accuracy
-             fitness = c1 * change + c2 * acc
-         return fitness
+        fitness = 0
+        for shape in self.shapes:
+            change = self.change
+            acc = self.accuracy
+            fitness += c1 * change + c2 * acc
+        return fitness
 
     def maskChange(self, shapes):
         value = 0
