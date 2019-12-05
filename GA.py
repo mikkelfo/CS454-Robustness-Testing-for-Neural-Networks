@@ -9,8 +9,8 @@
 import random
 from numpy.random import choice
 import numpy as np
-
 import mask as m
+import shape as s
 
 
 def initPopulation(popSize, maxShapes, shapeSize, maxPoints, imageSize):
@@ -20,7 +20,7 @@ def initPopulation(popSize, maxShapes, shapeSize, maxPoints, imageSize):
         shapes = []
         for j in range(0, nrOfShapes):
             # change to passing random amount of points 3 to max
-            shapes.append(m.Shape(random.randint(2, maxPoints)))
+            shapes.append(s.Shape(random.randint(2, maxPoints)))
 
         # get the shapes into mask using new function
         population.append(m.Mask(shapes))
