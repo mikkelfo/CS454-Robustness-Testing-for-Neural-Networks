@@ -1,9 +1,12 @@
 import fitnessfunction as fitAcc
 
 class Mask:
+    # BIG PROBLEM
+    #fitness_value takes in 2 parameters
     def __init__(self, shapes):
         self.shapes = shapes
-        self.accuracy = fitAcc.fitness_value()
+        self.accuracy = 0
+        #self.accuracy = fitAcc.fitness_value()
         self.change = self.maskChange(shapes)
         self.fitness = self.calculateFitness(1,1)
 
