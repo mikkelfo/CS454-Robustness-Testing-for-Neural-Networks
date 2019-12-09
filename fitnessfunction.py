@@ -64,7 +64,7 @@ def load_model():
     inception = keras.models.load_model('neuralNetwork/inceptionv3_base_model.hdf5', compile=False)
     return inception
 
-def fitness_value(inception_model, masked_images):
+def fitness_value(inception_model=load_model(), masked_images=get_images()):
     number_of_images = 1000
     #read labels from file
     with open('val.txt') as f:

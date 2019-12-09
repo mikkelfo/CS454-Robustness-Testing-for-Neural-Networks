@@ -1,19 +1,15 @@
-import fitnessfunction as fitAcc
+import fitnessfunction
 
 class Mask:
     def __init__(self, shapes):
         self.shapes = shapes
-        self.accuracy = fitAcc.fitness_value()
+        self.accuracy = 0
         self.change = self.maskChange(shapes)
-        self.fitness = self.calculateFitness(1,1)
-
-    def calculateFitness(self, c1, c2):
-        fitness = 0
-        for shape in self.shapes:
-            change = self.change
-            acc = self.accuracy
-            fitness += c1 * change + c2 * acc
-        return fitness
+        self.fitness = 0
+        
+    def calculateFitness(self, inception_model, masked_images):
+        self.accuracy = fitnessfunction.fitness_value(inception_model, masked_images)
+        return self.accuracy/self.change
 
     def maskChange(self, shapes):
         value = 0
