@@ -1,6 +1,8 @@
 import fitnessfunction
 
 class Mask:
+    # BIG PROBLEM
+    #fitness_value takes in 2 parameters
     def __init__(self, shapes):
         self.shapes = shapes
         self.accuracy = 0
