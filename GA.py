@@ -115,12 +115,12 @@ def tournament(population, tournamentSize, matingPoolSize):
     matingPool = []
     #fills matingPool until matingPoolSize is reached
     for i in 0..matingPoolSize:       
-        #selects k masks from the population
+        #selects as many masks from the population as passed in the argument
         contestants = random.sample(population, tournamentSize)
         best = contestants[0]
         #loop through every contestant and save the best one
-        for i in contestants:
-            if i.fitness > best.fitness:
-                best = i
+        for x in contestants:
+            if x.fitness > best.fitness and x not in matingPool:
+                best = x
         matingPool.append(best)
-    return matingPool
+    return matingPool 
