@@ -20,17 +20,6 @@ def preprocess_for_eval(image):
     image *= 2.
     return image
 
-def preprocess(image, height, width):
-    y,x,z = image.shape
-    startx = x//2-(width//2)
-    starty = y//2-(height//2)
-    return image[starty:starty+height,startx:startx+width]
-
-#download model
-download_model = False
-if download_model:
-    download_base_model()
-
 def get_accuracy(val_labels, class_numbers):
     number_of_images = val_labels.size
     number_of_correct = 0
@@ -54,12 +43,7 @@ def get_images():
 		class_mode = None)
 	
     images = image_generator.next()
-    #resize
-    original_images = np.empty((number_of_images,299,299,3))
-    for i in range(number_of_images):
-        processed_image = preprocess(images[i], 299, 299)
-        original_images[i] = processed_image
-    return original_images
+    return images
 	
 def load_model():
     inception = keras.models.load_model('neuralNetwork/inceptionv3_base_model.hdf5', compile=False)
