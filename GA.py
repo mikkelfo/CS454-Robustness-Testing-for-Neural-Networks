@@ -9,69 +9,70 @@
 import random
 from numpy.random import choice
 import numpy as np
-import mask
-import shape
+from mask import Mask
+from shape import Shape
 
 
 def initPopulation(popSize, maxShapes, shapeSize, maxPoints, imageSize):
     population = []
-    for i in range(0, popSize):
-        nrOfShapes = random.randint(1, maxShapes)
-        shapes = []
-        for j in range(0, nrOfShapes):
-            # change to passing random amount of points 3 to max
-            shapes.append(shape.Shape(random.randint(2, maxPoints)))
 
-        # get the shapes into mask using new function
-        population.append(mask.Mask(shapes))
+    # Generates population
+    for _ in range(popSize):
+        shapes = []
+        nrOfShapes = random.randint(1, maxShapes)
+
+        # Generates shapes for Mask
+        for _ in range(nrOfShapes):
+            nrOfPoints = random.randint(2, maxPoints)
+            shape = Shape(nrOfPoints)
+            shapes.append(shape)
+
+        # Makes individual and adds to population
+        indv = Mask(shapes)
+        population.append(indv)
 
     return population
 
-
+# Picks n, m of parents' shapes to pass to child
 def crossover(parent1, parent2):
-    nr1 = random.randint(1, len(parent1.shapes))
-    nr2 = random.randint(1, len(parent2.shapes))
+    # Number of shapes from parents
+    n = random.randint(1, len(parent1.shapes))
+    m = random.randint(1, len(parent2.shapes))
 
+    # Adds parent genes to child
     child = []
-    temp1 = random.sample(parent1.shapes, nr1)
-    for i in temp1:
-        child.append(i)
-    temp2 = random.sample(parent2.shapes, nr2)
-    for i in temp2:
-        child.append(i)
+    child += random.sample(parent1.shapes, n)
+    child += random.sample(parent2.shapes, m)
 
-    # get children shapes into mask
-    return mask.Mask(child)
+    return Mask(child)
 
 
 # Mutation, when called, will always mutate at least ONE thing and up to five.
-def mutation(shape):
-    # Decide how many things will be mutated
+def mutation(shape, prob=None):
+    if prob is None:
+        prob = [0.2, 0.2, 0.2, 0.2, 0.2]
+
     numOfMut = random.randint(1, 5)
+    numOptions = [1, 2, 3, 4, 5]
 
-    numSet = [1, 2, 3, 4, 5]
+    # Randomly chooses {numOfMut} amount of mutation operations
+    choiceSet = choice(numOptions, numOfMut, replace=False, p=prob)  # <-Change probabilities here
 
-    # Pull out the things that will be mutated
-    choiceSet = choice(numSet, numOfMut, replace=False,
-                       p=[0.2, 0.2, 0.2, 0.2, 0.2])  # <-Change probabilities here
-
-    # Moves a point
+    # Adds a point
     if 1 in choiceSet:
-        shape.listOfPoints = np.delete(shape.listOfPoints, random.randrange(len(shape.listOfPoints)), 0)
-        shape.listOfPoints = np.vstack([shape.listOfPoints, shape.createRandomPoint()])
-
-    # Adding a point
-    if 2 in choiceSet:
-        shape.listOfPoints = np.vstack([shape.listOfPoints, shape.createRandomPoint()])
+        shape.add_point()
 
     # Removes a point
-    if 3 in choiceSet:
-        if len(shape.listOfPoints) > 3:
-            shape.listOfPoints = np.delete(shape.listOfPoints, random.randrange(len(shape.listOfPoints)), 0)
+    if 2 in choiceSet:
+        shape.remove_point()
 
-    # Moves centerpoint within limit.
+    # Moves a point
+    if 3 in choiceSet:
+        shape.move_point()
+
+    # Moves entire shape
     if 4 in choiceSet:
-        shape.moveShape(30)
+        shape.moveShape()
 
     # Mutates RGB-values. Between 1-3 RGB-values will be changed.
     if 5 in choiceSet:
@@ -82,45 +83,49 @@ def mutation(shape):
 
         # Mutate R
         if 1 in RBGToChangeSet:
-            shape.changeRGB[0] = legalRGBValue(shape.changeRGB[0], RGBRange)
+            shape.changeRGB[0] = _legalRGBValue(shape.changeRGB[0], RGBRange)
 
         # Mutate G
         if 2 in RBGToChangeSet:
-            shape.changeRGB[1] = legalRGBValue(shape.changeRGB[1], RGBRange)
+            shape.changeRGB[1] = _legalRGBValue(shape.changeRGB[1], RGBRange)
 
         # Mutate B
         if 3 in RBGToChangeSet:
-            shape.changeRGB[2] = legalRGBValue(shape.changeRGB[2], RGBRange)
+            shape.changeRGB[2] = _legalRGBValue(shape.changeRGB[2], RGBRange)
 
 
 # Returns a RGB value that is within the given range. If RGB is close to min or max, the function
 # will dynamically adjust. Example if value is 253 and range is 20, the function will pick random number between
 # [-18, 2] as to not go out of bounds.
-def legalRGBValue(RGBValue, RGBRange):
+def _legalRGBValue(RGBValue, RGBRange):
     rDiffFromMax = abs(RGBValue - 255)
-    rDiffFromMin = abs(RGBValue + 255) - 255
+    rDiffFromMin = RGBValue  # TODO: Changed this from      rDiffFromMin = abs(RGBValue + 255) - 255
     smallestDiff = min(rDiffFromMax, rDiffFromMin)
 
     if smallestDiff >= RGBRange / 2:
         RGBValue += random.randint(-RGBRange / 2, RGBRange / 2)
     elif rDiffFromMax < RGBRange / 2:
-        RGBValue += random.randint((-RGBRange / 2) - ((RGBRange/2) - rDiffFromMax), rDiffFromMax)
+        RGBValue += random.randint((-RGBRange / 2) - ((RGBRange / 2) - rDiffFromMax), rDiffFromMax)
     elif rDiffFromMin < RGBRange / 2:
-        RGBValue += random.randint(-rDiffFromMin, (RGBRange / 2) + ((RGBRange/2) - rDiffFromMin))
+        RGBValue += random.randint(-rDiffFromMin, (RGBRange / 2) + ((RGBRange / 2) - rDiffFromMin))
 
     return RGBValue
 
-#takes in the population, how many of the population to enter in the tournament and how many winners to return
+
+# takes in the population, how many of the population to enter in the tournament and how many winners to return
 def tournament(population, tournamentSize, matingPoolSize):
     matingPool = []
-    #fills matingPool until matingPoolSize is reached
-    for i in 0..matingPoolSize:       
-        #selects as many masks from the population as passed in the argument
+
+    # fills matingPool until matingPoolSize is reached
+    for _ in range(matingPoolSize):
+
         contestants = random.sample(population, tournamentSize)
         best = contestants[0]
-        #loop through every contestant and save the best one
+
+        # TODO: This needs fixing. What's the purpose of 'x not in matingPool'. We could end up with only 1 individual
+        # loop through every contestant and save the best one
         for x in contestants:
             if x.fitness > best.fitness and x not in matingPool:
                 best = x
         matingPool.append(best)
-    return matingPool 
+    return matingPool
