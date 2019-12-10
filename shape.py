@@ -76,7 +76,7 @@ class Shape:
         return len(points)
 
     # Calculates shape change for fitness (area + absolute RGB change)
-    def shapeChange(self):
+    def getShapeChange(self):
         # Finds absolute RGB change
         absChange = sum([abs(val) for val in self.changeRGB])
         return self.area + absChange
