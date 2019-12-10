@@ -33,6 +33,7 @@ for i in range(0, len(population)):
 for i in range(0, len(population)):
     fitness = population[i].calculateFitness(inception, original_images, labels) #masked images here !CAUTION! This takes very long(the whole reason we use a GA)
     print (fitness)
+    evaluationBudget--
 
 new_pop = []
 for i in population:
