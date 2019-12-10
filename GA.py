@@ -9,8 +9,8 @@
 import random
 from numpy.random import choice
 import numpy as np
-import mask as m
-import shape as s
+import mask
+import shape
 
 
 def initPopulation(popSize, maxShapes, shapeSize, maxPoints, imageSize):
@@ -20,10 +20,10 @@ def initPopulation(popSize, maxShapes, shapeSize, maxPoints, imageSize):
         shapes = []
         for j in range(0, nrOfShapes):
             # change to passing random amount of points 3 to max
-            shapes.append(s.Shape(random.randint(2, maxPoints)))
+            shapes.append(shape.Shape(random.randint(2, maxPoints)))
 
         # get the shapes into mask using new function
-        population.append(m.Mask(shapes))
+        population.append(mask.Mask(shapes))
 
     return population
 
@@ -41,7 +41,7 @@ def crossover(parent1, parent2):
         child.append(i)
 
     # get children shapes into mask
-    return m.Mask(child)
+    return mask.Mask(child)
 
 
 # Mutation, when called, will always mutate at least ONE thing and up to five.
@@ -109,3 +109,14 @@ def legalRGBValue(RGBValue, RGBRange):
         RGBValue += random.randint(-rDiffFromMin, (RGBRange / 2) + ((RGBRange/2) - rDiffFromMin))
 
     return RGBValue
+
+#returns the best mask from k randomly chosen masks from the whole population
+def tournament(population, k):
+    #selects k masks from the population
+    contestants = random.sample(population, k)
+    best = contestants[0]
+    #loop through every contestant and save the best one
+    for i in contestants:
+        if i.fitness > best.fitness:
+            best = i
+    return best
