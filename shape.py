@@ -3,7 +3,7 @@ from validity import validate, validate_point, validate_list
 from scipy.spatial import Delaunay
 from operator import itemgetter
 
-
+# TODO: Should we be allowed to remove center point???
 class Shape:
     def __init__(self, k, dim=299):
         assert 2 <= k <= 9
@@ -82,11 +82,11 @@ class Shape:
         return self.area + absChange
 
     # Moves the shape to random place within the specified limit
-    def moveShape(self, limit):
+    def moveShape(self, limit=30):
         xShift = random.randint(-limit, limit)
         yShift = random.randint(-limit, limit)
 
-        evaluationList = [(x+xShift, y+yShift) for (x,y) in self.listOfPoints]
+        evaluationList = [(x + xShift, y + yShift) for (x, y) in self.listOfPoints]
         evaluationCenter = (self.centerPoint[0] + xShift, self.centerPoint[1] + yShift)
 
         # Checks if new points are within the picture
@@ -96,8 +96,8 @@ class Shape:
         if not validate_point(evaluationCenter):
             return self.moveShape(limit)
 
-        self.centerPoint = (self.centerPoint[0] + xShift, self.centerPoint[1] + yShift)
-        self.listOfPoints += (xShift, yShift)
+        self.centerPoint = evaluationCenter
+        self.listOfPoints = evaluationList
 
     # Create new random point and adds it to shape
     def add_point(self):
