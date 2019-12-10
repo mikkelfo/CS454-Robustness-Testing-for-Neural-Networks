@@ -9,10 +9,14 @@ shapeSize = 25
 maxPoints = 8
 imageSize = 256
 mutationRate = 0.02
+evaluationBudget = 10000
+download = False
 
-fitnessfunction.download_base_model()
+if (download):
+    fitnessfunction.download_base_model()
+
 inception = fitnessfunction.load_model()
-   
+original_images = fitnessfunction.get_images()
 
 pop = GA.initPopulation(populationSize, maxShapes,
                      shapeSize, maxPoints, imageSize)

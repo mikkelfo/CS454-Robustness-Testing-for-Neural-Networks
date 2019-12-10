@@ -12,6 +12,7 @@ def download_base_model():
     base_model = tf.keras.applications.InceptionV3(include_top=True, weights='imagenet')
     model_path = os.path.join(save_dir, model_name)
     base_model.save(model_path)
+    print("Model downloaded!")
 	
 def preprocess_for_eval(image):
     image /= 255.
@@ -64,7 +65,7 @@ def load_model():
     inception = keras.models.load_model('neuralNetwork/inceptionv3_base_model.hdf5', compile=False)
     return inception
 
-def fitness_value(inception_model=load_model(), masked_images=get_images()):
+def fitness_value(inception_model, masked_images):
     number_of_images = 1000
     #read labels from file
     with open('val.txt') as f:
