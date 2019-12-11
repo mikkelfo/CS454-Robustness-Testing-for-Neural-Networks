@@ -35,12 +35,12 @@ for i in range(0, len(population)):
 
 # getFitnessValues
 for i in range(0, len(population)):
-    fitness = population[i].calculateFitness(inception, original_images, labels, original_accuracy) #masked images here !CAUTION! This takes very long(the whole reason we use a GA)
+    fitness = population[i].calculateFitness(inception, original_images, labels, original_accuracy) # masked images here !CAUTION! This takes very long(the whole reason we use a GA)
     # print("Fitness: %.8f" % fitness)
     print("Fitness: " + f"{fitness:e}")  # <- Prints in scientific notation
     evaluationBudget -= 1
 
-#TODO:Elitism selection
+# TODO:Elitism selection
 
 while evaluationBudget > 0:
 
@@ -59,7 +59,7 @@ while evaluationBudget > 0:
                (new_pop[i].getMaskChange(), len(new_pop[i].shapes)))
 
     for i in range(0, len(population)):
-        fitness = new_pop[i].calculateFitness(inception, original_images, labels, original_accuracy) #masked images here
+        fitness = new_pop[i].calculateFitness(inception, original_images, labels, original_accuracy)  # masked images here
         print("Fitness: " + f"{fitness:e}")  # <- Prints in scientific notation
         evaluationBudget -= 1
 
