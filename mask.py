@@ -9,10 +9,10 @@ class Mask:
         self.change = self.maskChange(shapes)
         self.fitness = 0
         
-    def calculateFitness(self, inception_model, masked_images, labels):
+    def calculateFitness(self, inception_model, masked_images, labels, original_accuracy):
         self.accuracy = fitnessfunction.fitness_value(inception_model, masked_images, labels)
-        self.fitness = self.accuracy/self.change
-        return self.accuracy/self.change
+        self.fitness = (original_accuracy - self.accuracy)/self.change
+        return self.fitness
 
     def maskChange(self, shapes):
         value = 0

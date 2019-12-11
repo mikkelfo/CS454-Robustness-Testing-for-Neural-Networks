@@ -22,6 +22,9 @@ inception = fitnessfunction.load_model()
 original_images = fitnessfunction.get_images()
 labels = fitnessfunction.get_labels()
 
+original_accuracy = fitnessfunction.fitness_value(inception, original_images, labels)
+print(original_fitness)
+
 population = GA.initPopulation(populationSize, maxShapes, shapeSize, maxPoints, imageSize)
 #population.append(mask.Mask([]))
 
@@ -31,9 +34,9 @@ for i in range(0, len(population)):
 
 #getFitnessValues
 for i in range(0, len(population)):
-    fitness = population[i].calculateFitness(inception, original_images, labels) #masked images here !CAUTION! This takes very long(the whole reason we use a GA)
+    fitness = population[i].calculateFitness(inception, original_images, labels, original_accuracy) #masked images here !CAUTION! This takes very long(the whole reason we use a GA)
     print (fitness)
-    evaluationBudget--
+    evaluationBudget -= 1
 
 new_pop = []
 for i in population:
