@@ -8,7 +8,6 @@
 
 import random
 from numpy.random import choice
-import numpy as np
 from mask import Mask
 from shape import Shape
 
@@ -20,7 +19,7 @@ def initPopulation(popSize, maxShapes, shapeSize, maxPoints, imageSize):
     for _ in range(popSize):
         shapes = []
         nrOfShapes = random.randint(1, maxShapes)
-
+        # TODO: Pack this into Mask
         # Generates shapes for Mask
         for _ in range(nrOfShapes):
             nrOfPoints = random.randint(2, maxPoints)
@@ -99,7 +98,7 @@ def mutation(shape, prob=None):
 # [-18, 2] as to not go out of bounds.
 def _legalRGBValue(RGBValue, RGBRange):
     rDiffFromMax = abs(RGBValue - 255)
-    rDiffFromMin = RGBValue  # TODO: Changed this from      rDiffFromMin = abs(RGBValue + 255) - 255
+    rDiffFromMin = abs(RGBValue)
     smallestDiff = min(rDiffFromMax, rDiffFromMin)
 
     if smallestDiff >= RGBRange / 2:
@@ -122,10 +121,9 @@ def tournament(population, tournamentSize, matingPoolSize):
         contestants = random.sample(population, tournamentSize)
         best = contestants[0]
 
-        # TODO: This needs fixing. What's the purpose of 'x not in matingPool'. We could end up with only 1 individual
         # loop through every contestant and save the best one
         for x in contestants:
-            if x.fitness > best.fitness and x not in matingPool:
+            if x.fitness > best.fitness:
                 best = x
         matingPool.append(best)
     return matingPool

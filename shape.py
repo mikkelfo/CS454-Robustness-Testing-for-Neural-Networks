@@ -3,7 +3,7 @@ from validity import validate, validate_point, validate_list
 from scipy.spatial import Delaunay
 from operator import itemgetter
 
-# TODO: Should we be allowed to remove center point???
+
 class Shape:
     def __init__(self, k, dim=299):
         assert 2 <= k <= 9
@@ -12,8 +12,8 @@ class Shape:
         self.centerPoint = self.initCenter()        # Random initialization
         self.listOfPoints = self.initPoints(k)      # Random initialization
         self.changeRGB = self.initRGB()             # Random initialization
-        self.area = self.area()                     # Calculation
-        self.change = self.shapeChange()            # Calculation
+        self.area = self.getArea()                  # Calculation   TODO: Update function
+        self.change = self.getShapeChange()         # Calculation
 
     def initCenter(self):
         x, y = random.randint(0, self.dim), random.randint(0, self.dim)
@@ -38,7 +38,7 @@ class Shape:
         xRange, yRange = [xCenter - diff, xCenter + diff], [yCenter - diff, yCenter + diff]
 
         # Picks x, y based on centerPoint +- {diff}
-        x, y = random.randint(xRange[0], xRange[1]), random.randint(yRange[0], yRange[1] + 1)
+        x, y = random.randint(xRange[0], xRange[1]), random.randint(yRange[0], yRange[1])
 
         # If invalid point (out of range), recursively try again
         if not validate_point((x, y)):
@@ -50,8 +50,8 @@ class Shape:
     def initRGB():
         return random.sample(range(-255, 255), 3)
 
-    def area(self):
-        return self.getInsidePoints()
+    def getArea(self):
+        return len(self.getInsidePoints())
 
     def getInsidePoints(self):
         def _in_hull(p):
@@ -73,13 +73,13 @@ class Shape:
                 if _in_hull(t):
                     points.append(t)
 
-        return len(points)
+        return points
 
     # Calculates shape change for fitness (area + absolute RGB change)
     def getShapeChange(self):
         # Finds absolute RGB change
         absChange = sum([abs(val) for val in self.changeRGB])
-        return self.area + absChange
+        return self.area * absChange
 
     # Moves the shape to random place within the specified limit
     def moveShape(self, limit=30):
@@ -91,9 +91,6 @@ class Shape:
 
         # Checks if new points are within the picture
         if not validate_list(evaluationList):
-            return self.moveShape(limit)
-
-        if not validate_point(evaluationCenter):
             return self.moveShape(limit)
 
         self.centerPoint = evaluationCenter
@@ -119,7 +116,7 @@ class Shape:
     # Helper function for remove_point()
     def _remove_point(self):
         newList = self.listOfPoints.copy()
-        randIndex = random.randrange(len(newList))
+        randIndex = random.randrange(1, len(newList))
         del newList[randIndex]
 
         return newList
