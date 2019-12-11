@@ -1,6 +1,8 @@
-def apply_mask(img, inside_points, mask):
-    for x, y in inside_points:
-        img[y][x] = boundary(img[y][x] + mask)
+def apply_mask(img, mask):
+    for shape in mask:
+        change = shape.changeRGB
+        for (x, y) in shape.getInsidePoints():
+            img[y][x] = [val+change for val in img[y][x]]
 
     return img
 
