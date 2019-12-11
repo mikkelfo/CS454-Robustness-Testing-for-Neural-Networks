@@ -9,25 +9,16 @@
 import random
 from numpy.random import choice
 from mask import Mask
-from shape import Shape
 
 
-def initPopulation(popSize, maxShapes, shapeSize, maxPoints, imageSize):
+def init_population(popSize):
     population = []
 
     # Generates population
     for _ in range(popSize):
-        shapes = []
-        nrOfShapes = random.randint(1, maxShapes)
-        # TODO: Pack this into Mask
-        # Generates shapes for Mask
-        for _ in range(nrOfShapes):
-            nrOfPoints = random.randint(2, maxPoints)
-            shape = Shape(nrOfPoints)
-            shapes.append(shape)
 
         # Makes individual and adds to population
-        indv = Mask(shapes)
+        indv = Mask()
         population.append(indv)
 
     return population
@@ -71,7 +62,7 @@ def mutation(shape, prob=None):
 
     # Moves entire shape
     if 4 in choiceSet:
-        shape.moveShape()
+        shape.move_shape()
 
     # Mutates RGB-values. Between 1-3 RGB-values will be changed.
     if 5 in choiceSet:
@@ -82,21 +73,21 @@ def mutation(shape, prob=None):
 
         # Mutate R
         if 1 in RBGToChangeSet:
-            shape.changeRGB[0] = _legalRGBValue(shape.changeRGB[0], RGBRange)
+            shape.changeRGB[0] = _legal_RGB_value(shape.changeRGB[0], RGBRange)
 
         # Mutate G
         if 2 in RBGToChangeSet:
-            shape.changeRGB[1] = _legalRGBValue(shape.changeRGB[1], RGBRange)
+            shape.changeRGB[1] = _legal_RGB_value(shape.changeRGB[1], RGBRange)
 
         # Mutate B
         if 3 in RBGToChangeSet:
-            shape.changeRGB[2] = _legalRGBValue(shape.changeRGB[2], RGBRange)
+            shape.changeRGB[2] = _legal_RGB_value(shape.changeRGB[2], RGBRange)
 
 
 # Returns a RGB value that is within the given range. If RGB is close to min or max, the function
 # will dynamically adjust. Example if value is 253 and range is 20, the function will pick random number between
 # [-18, 2] as to not go out of bounds.
-def _legalRGBValue(RGBValue, RGBRange):
+def _legal_RGB_value(RGBValue, RGBRange):
     rDiffFromMax = abs(RGBValue - 255)
     rDiffFromMin = abs(RGBValue)
     smallestDiff = min(rDiffFromMax, rDiffFromMin)
