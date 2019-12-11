@@ -15,7 +15,7 @@ download = False
 tournamentSize = 4
 matingPoolSize = 2
 
-if (download):
+if download:
     fitnessfunction.download_base_model()
 
 inception = fitnessfunction.load_model()
@@ -23,25 +23,26 @@ original_images = fitnessfunction.get_images()
 labels = fitnessfunction.get_labels()
 
 original_accuracy = fitnessfunction.fitness_value(inception, original_images, labels)
-print(original_fitness)
+print("Original Accuracy: " + f"{original_accuracy:e}")
 
 population = GA.initPopulation(populationSize, maxShapes, shapeSize, maxPoints, imageSize)
-#population.append(mask.Mask([]))
+# population.append(mask.Mask([]))
 
 for i in range(0, len(population)):
     print("Change of the mask: %8.3f Number of shapes in the mask: %d" %
           (population[i].getMaskChange(), len(population[i].shapes)))
 
-#getFitnessValues
+# getFitnessValues
 for i in range(0, len(population)):
     fitness = population[i].calculateFitness(inception, original_images, labels, original_accuracy) #masked images here !CAUTION! This takes very long(the whole reason we use a GA)
-    print (fitness)
+    # print("Fitness: %.8f" % fitness)
+    print("Fitness: " + f"{fitness:e}")  # <- Prints in scientific notation
     evaluationBudget -= 1
 
 new_pop = []
 for i in population:
-    #GA.tournament(population, tournamentSize, matingPoolSize)
-    selection = random.sample(population, 2)
+    selection = GA.tournament(population, tournamentSize, matingPoolSize)
+    # selection = random.sample(population, 2) # <- Old random selection
     childMask = GA.crossover(selection[0], selection[1])
     for shape in childMask.shapes:
         if random.random() < mutationRate:
