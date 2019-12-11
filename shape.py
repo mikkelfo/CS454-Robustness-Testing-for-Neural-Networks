@@ -1,103 +1,125 @@
 import random
-import numpy as np
-
+from validity import validate, validate_point, validate_list
 from scipy.spatial import Delaunay
 from operator import itemgetter
 
 
 class Shape:
     def __init__(self, k, dim=299):
+        assert 2 <= k <= 9
         assert dim > 0
-        self.dim = dim
-        # If changing centerPoint, we also need to change listOfPoints
-        self.centerPoint = self.initCenter()
-        self.listOfPoints = np.array(self.initPoints(k))
-        self.changeRGB = self.initRGB()
-        self.area = self.area()
-        self.change = self.shapeChange(self.changeRGB, self.area)
+        self.dim = dim                              # Given
+        self.centerPoint = self.init_center()        # Random initialization
+        self.listOfPoints = self.init_points(k)      # Random initialization
+        self.changeRGB = self.init_RGB()             # Random initialization
 
-    def initCenter(self):
+        # Below values are set to None, so our program cant run, e.g. call Shape.area, before Shape.update() is called
+        self.insidePoints = None                          # Calculation
+        self.area = None                            # Calculation
+        self.change = None                          # Calculation
+
+    def init_center(self):
         x, y = random.randint(0, self.dim), random.randint(0, self.dim)
         return x, y
 
-    def initPoints(self, k, diff=10):
-        assert 2 <= k <= 9
+    def init_points(self, k, diff=30):
         r = random.randint(2, k)
-
         points = [self.centerPoint]
-        for _ in range(r):
-            points.append(self.createRandomPoint(diff))
 
-        try:
-            Delaunay(points)
-        except:
-            return self.initPoints(k, diff)
+        # Creates {r} random points
+        for _ in range(r):
+            points.append(self.create_random_point(diff))
+
+        # If invalid points, recursively try again
+        if not validate(points):
+            return self.init_points(k, diff)
 
         return points
 
-    def createRandomPoint(self, diff=30):
-        xc, yc = self.centerPoint
-        xr, yr = [xc - diff, xc + diff], [yc - diff, yc + diff]
+    def create_random_point(self, diff):
+        xCenter, yCenter = self.centerPoint
+        xRange, yRange = [xCenter - diff, xCenter +
+                          diff], [yCenter - diff, yCenter + diff]
 
-        x, y = random.choice(range(xr[0], xr[1])), random.choice(
-            range(yr[0], yr[1]))
+        # Picks x, y based on centerPoint +- {diff}
+        x, y = random.randint(xRange[0], xRange[1]), random.randint(
+            yRange[0], yRange[1])
 
-        if x not in range(0, self.dim) or y not in range(0, self.dim):
-            return self.createRandomPoint(diff)
+        # If invalid point (out of range), recursively try again
+        if not validate_point((x, y)):
+            return self.create_random_point(diff)
 
         return x, y
 
     @staticmethod
-    def initRGB():
+    def init_RGB():
         return random.sample(range(-255, 255), 3)
 
-    def area(self):
-        return self.getInsidePoints()
-
-    def getInsidePoints(self):
-        def in_hull(p):
+    def get_inside_points(self):
+        def _in_hull(p):
             return hull.find_simplex(p) >= 0
-        points = self.listOfPoints
-        min_x, max_x = min(points, key=itemgetter(0))[
-            0], max(points, key=itemgetter(0))[0]
-        min_y, max_y = min(points, key=itemgetter(1))[
-            1], max(points, key=itemgetter(1))[1]
 
+        # Finds the bounding box of listOfPoints
+        points = self.listOfPoints
+        min_x, max_x = min(points, key=itemgetter(0))[0], \
+            max(points, key=itemgetter(0))[0]
+        min_y, max_y = min(points, key=itemgetter(1))[1], \
+            max(points, key=itemgetter(1))[1]
+
+        # Finds points inside ConvexHull
         hull = Delaunay(points)
         points = []
         for x in range(min_x - 1, max_x + 1):
             for y in range(min_y - 1, max_y + 1):
                 t = (x, y)
-                if in_hull(t):
+                if _in_hull(t):
                     points.append(t)
-        return len(points)
 
-    # Calculates shape change for fitness
-    def shapeChange(self, changeRGB, area):
-        absChange = 0
-        for i in changeRGB:
-            absChange += abs(i)
-        return area + absChange
+        return points
 
-    # Gets the change value from the shape
-    def getShapeChange(self):
-        self.change = self.shapeChange(self.changeRGB, self.area)
-        return self.change
+    def update(self):
+        self.inside = self.get_inside_points()
+        self.area = len(self.inside)
+        self.change = self.area * sum([abs(val) for val in self.changeRGB])
 
     # Moves the shape to random place within the specified limit
-    def moveShape(self, limit):
+    def move_shape(self, limit=30):
         xShift = random.randint(-limit, limit)
         yShift = random.randint(-limit, limit)
 
-        evaluationList = self.listOfPoints + (xShift, yShift)
-        evaluationCenter = (self.centerPoint[0] + xShift, self.centerPoint[1] + yShift)
+        evaluationList = [(x + xShift, y + yShift)
+                          for (x, y) in self.listOfPoints]
+        evaluationCenter = (
+            self.centerPoint[0] + xShift, self.centerPoint[1] + yShift)
 
         # Checks if new points are within the picture
-        if evaluationList.max() not in range(0, self.dim) or evaluationList.min() not in range(0, self.dim):
-            return self.moveShape(limit)
+        if not validate_list(evaluationList):
+            return self.move_shape(limit)
 
-        if evaluationCenter[0] not in range(0, self.dim) or evaluationCenter[1] not in range(0, self.dim):
-            return self.moveShape(limit)
+        self.centerPoint = evaluationCenter
+        self.listOfPoints = evaluationList
 
-        self.centerPoint = (self.centerPoint[0] + xShift, self.centerPoint[1] + yShift)
-        self.listOfPoints += (xShift, yShift)
+    # Create new random point and adds it to shape
+    def add_point(self):
+        self.listOfPoints.append(self.create_random_point())
+
+    # Removes point IFF it doesn't invalidate the shape
+    def remove_point(self):
+        newList = self._remove_point()
+        if validate(newList):
+            self.listOfPoints = newList
+
+    # Moves point IFF it doesn't invalidate the shape
+    def move_point(self):
+        newList = self._remove_point()
+        newList.append(self.create_random_point())
+        if validate(newList):
+            self.listOfPoints = newList
+
+    # Helper function for remove_point()
+    def _remove_point(self):
+        newList = self.listOfPoints.copy()
+        randIndex = random.randrange(1, len(newList))
+        del newList[randIndex]
+
+        return newList

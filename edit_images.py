@@ -1,40 +1,31 @@
-import pickle
 import numpy as np
-from PIL import Image
 
 
-def load_data(file, path='cifar-10-batches-py/'):
-    with open(path + file, 'rb') as fo:
-        dic = pickle.load(fo, encoding='bytes')
-    return dic
+def apply_mask(images, mask):
 
+    # Constructs Mask matrix
+    matrix = np.empty((300, 300, 3))
+    for shape in mask:
+        change = shape.changeRGB
+        for (x, y) in shape.insidePoints:
+            matrix[y][x] += change
 
-def get_img(file, i):
-    images = file[b'data']
-    single_img = np.array(images[i])
-    single_img_reshaped = np.transpose(
-        np.reshape(single_img, (3, 32, 32)), (1, 2, 0))
-    return single_img_reshaped
+    # Applies mask to the images
+    for i in range(len(images)):
+        images[i] += matrix
 
+    # Adjust all affected pixels to range(0, 255)
+    for j in range(len(images)):
+        row, col, idx = np.nonzero(images[j] < 0)
+        for i in range(len(row)):
+            images[j][row[i]][col[i]][idx[i]] = 0
+            # images[j] is a singular image
+            # row[i] is the row number
+            # col[i] is the column number
+            # idx[i] is the index
 
-def show_img(img):
-    Image.fromarray(img, 'RGB').show()
+        row, col, idx = np.nonzero(images[j] > 255)
+        for i in range(len(row)):
+            images[j][row[i]][col[i]][idx[i]] = 255
 
-
-def apply_mask(img, inside_points, mask):
-    for x, y in inside_points:
-        img[y][x] = boundary(img[y][x] + mask)
-
-    return img
-
-
-def boundary(pixels):
-    new_array = []
-    for val in pixels:
-        if val not in range(0, 255):
-            if val < 0:
-                val = 0
-            elif val > 255:
-                val = 255
-        new_array.append(val)
-    return new_array
+    return images

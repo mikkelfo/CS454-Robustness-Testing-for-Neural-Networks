@@ -1,6 +1,5 @@
 import numpy as np
 import os
-import pickle
 import tensorflow as tf
 from tensorflow import keras
 
@@ -10,7 +9,8 @@ def download_base_model():
         os.mkdir('neuralNetwork')
     save_dir = os.path.join(os.getcwd(), 'neuralNetwork')
     model_name = 'inceptionv3_base_model.hdf5'
-    base_model = tf.keras.applications.InceptionV3(include_top=True, weights='imagenet')
+    base_model = tf.keras.applications.InceptionV3(
+        include_top=True, weights='imagenet')
     model_path = os.path.join(save_dir, model_name)
     base_model.save(model_path)
     print("Model downloaded!")
@@ -40,18 +40,19 @@ def get_images():
     datagen = keras.preprocessing.image.ImageDataGenerator()
     image_generator = datagen.flow_from_directory(
         'imagenet',
-        color_mode = 'rgb',
-        target_size = (299, 299),
-        shuffle = False,
-        batch_size = number_of_images,
-        class_mode = None)
+        color_mode='rgb',
+        target_size=(299, 299),
+        shuffle=False,
+        batch_size=number_of_images,
+        class_mode=None)
 
     images = image_generator.next()
     return images
 
 
 def load_model():
-    inception = keras.models.load_model('neuralNetwork/inceptionv3_base_model.hdf5', compile=False)
+    inception = keras.models.load_model(
+        'neuralNetwork/inceptionv3_base_model.hdf5', compile=False)
     return inception
 
 
@@ -72,7 +73,7 @@ def fitness_value(inception_model, masked_images, labels):
     val_labels = labels
 
     # preprocess images
-    processed_images = np.empty((number_of_images,299,299,3))
+    processed_images = np.empty((number_of_images, 299, 299, 3))
     for i in range(number_of_images):
         processed_image = preprocess_for_eval(masked_images[i])
         processed_images[i] = processed_image

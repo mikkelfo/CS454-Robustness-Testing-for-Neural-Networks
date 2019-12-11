@@ -1,27 +1,30 @@
 import fitnessfunction
+import random
+from shape import Shape
+
 
 class Mask:
-    # BIG PROBLEM
-    #fitness_value takes in 3 parameters
-    def __init__(self, shapes):
-        self.shapes = shapes
-        self.accuracy = 0
-        self.change = self.maskChange(shapes)
-        self.fitness = 0
-        
-    def calculateFitness(self, inception_model, masked_images, labels, original_accuracy):
-        self.accuracy = fitnessfunction.fitness_value(inception_model, masked_images, labels)
-        self.fitness = (original_accuracy - self.accuracy)/self.change
-        return self.fitness
+    def __init__(self, shapes=None):
+        if shapes is None:
+            self.shapes = self.init_shapes()    # Initialization
+        else:
+            self.shapes = shapes                # Set value
 
-    def maskChange(self, shapes):
-        value = 0
-        for i in shapes:
-            value += i.getShapeChange()
-        return value
+        # Below values are set to None, so our program cant run, e.g. call Mask.fitness, before Mask.update() is called
+        self.accuracy = None                    # Calculated
+        self.change = None                      # Calculated
+        self.fitness = None                     # Calculated
 
-    def getMaskChange(self):
-        self.change = self.maskChange(self.shapes)
-        return self.change
+    def mask_change(self):
+        return sum([shape.getShapeChange() for shape in self.shapes])
 
+    def update(self, inception_model, masked_images):
+        self.accuracy = fitnessfunction.fitness_value(
+            inception_model, masked_images)
+        self.change = self.mask_change()
+        self.fitness = self.accuracy / self.change
 
+    @staticmethod
+    def init_shapes(maxShapes=5, maxPoints=9):
+        nrOfShapes = random.randint(1, maxShapes)
+        return [Shape(random.randint(2, maxPoints)) for _ in range(nrOfShapes)]
