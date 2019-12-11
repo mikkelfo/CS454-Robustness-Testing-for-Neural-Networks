@@ -1,11 +1,3 @@
-# change coordinates to an array of tuples instead of just an array
-# make a function to get the center point. the center point can spawn anywhere
-# the points that spawns outside the picture gets discarded, every shape needs a minimum of 3 points
-# define and write the mutation function
-# make sure the RGB values doesn't go ovr 255 or under 0
-# shape should have the amount of changed pixels and rgb change, mask should have a sum of all shapes
-# keep the points relative
-
 import random
 from numpy.random import choice
 from mask import Mask
