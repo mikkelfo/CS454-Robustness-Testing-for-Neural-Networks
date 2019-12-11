@@ -9,7 +9,8 @@ maxShapes = 20
 shapeSize = 25
 maxPoints = 8
 imageSize = 299
-mutationRate = 0.02
+crossoverRate = 0.9
+mutationRate = 0.05
 evaluationBudget = 10000
 download = False
 
@@ -40,15 +41,15 @@ for i in range(0, len(population)):
     print("Fitness: " + f"{fitness:e}")  # <- Prints in scientific notation
     evaluationBudget -= 1
 
-#TODO:Elitism selection
-
 while evaluationBudget > 0:
 
     new_pop = []
-    for i in population:
-        selection = GA.tournament(population, tournamentSize, matingPoolSize)
+  
+    selection = GA.tournament(population, tournamentSize, matingPoolSize)
+    for i in range(0, len(selection),2):
         # selection = random.sample(population, 2) # <- Old random selection
-        childMask = GA.crossover(selection[0], selection[1])
+        if random.random() < crossoverRate:
+            childMask = GA.crossover(selection[i], selection[i+1])
         for shape in childMask.shapes:
             if random.random() < mutationRate:
                 GA.mutation(shape)
@@ -58,16 +59,17 @@ while evaluationBudget > 0:
         print("Change of the mask: %8.3f Number of shapes in the mask: %d" %
                (new_pop[i].getMaskChange(), len(new_pop[i].shapes)))
 
-    for i in range(0, len(population)):
+    for i in range(0, len(new_pop)):
         fitness = new_pop[i].calculateFitness(inception, original_images, labels, original_accuracy) #masked images here
         print("Fitness: " + f"{fitness:e}")  # <- Prints in scientific notation
         evaluationBudget -= 1
 
+    #next generation selection TODO change selection alg
     combined_population = population + new_pop
     combined_population_fitness = np.empty(2*populationSize)
     for i in range(0, populationSize):
         combined_population_fitness[i] = population[i].fitness
-    for i in range(0, populationSize):
+    for i in range(0, len(new_pop)):
         combined_population_fitness[i+populationSize] = new_pop[i].fitness
     for i in range(0, populationSize):
         max_fitness_index = np.argmax(combined_population_fitness)
