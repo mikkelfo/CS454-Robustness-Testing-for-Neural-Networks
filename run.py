@@ -24,29 +24,29 @@ inception = fitnessfunction.load_model()
 original_images = fitnessfunction.get_images()
 labels = fitnessfunction.get_labels()
 
+# get the original accuracy (no masks applied)
 original_accuracy = fitnessfunction.fitness_value(
     inception, original_images, labels)
 print("Original Accuracy: " + f"{original_accuracy:e}")
 
-population = GA.initPopulation(
-    populationSize, maxShapes, shapeSize, maxPoints, imageSize)
-# population.append(mask.Mask([])) #empty mask breaks calculations
+# initialise empty mask population
+population = GA.init_population(populationSize)
 
+# evaluate/update first generation
 for i in range(0, len(population)):
-    print("Change of the mask: %8.3f Number of shapes in the mask: %d" %
-          (population[i].getMaskChange(), len(population[i].shapes)))
+    # Function can be made instead of direct access -PUT IN FUNCTION?-
+    # first generation will have same accuracy as original as it's a population
+    # of empty masks
+    population[i].accuracy = original_accuracy
+    population[i].change = population[i].mask_change()
+    population[i].fitness = population[i].accuracy / population[i].change
+    print("Fitness: " + f"{population[i].fitness:e}")  # <- Prints sci-notation
+    # we've already used it so not sure if evaluation budget required
+    # evaluationBudget -= 1
 
-# getFitnessValues
-for i in range(0, len(population)):
-    # masked images here !CAUTION! This takes very long(the whole reason we use a GA)
-    fitness = population[i].calculateFitness(
-        inception, original_images, labels, original_accuracy)
-    # print("Fitness: %.8f" % fitness)
-    print("Fitness: " + f"{fitness:e}")  # <- Prints in scientific notation
-    evaluationBudget -= 1
-
+    generation = 0
 while evaluationBudget > 0:
-
+    print("Generation: " + str(generation))
     new_pop = []
 
     selection = GA.tournament(population, tournamentSize, matingPoolSize)
@@ -54,24 +54,25 @@ while evaluationBudget > 0:
         # selection = random.sample(population, 2) # <- Old random selection
         if random.random() < crossoverRate:
             childMask = GA.crossover(selection[i], selection[i + 1])
-        for shape in childMask.shapes:
-            if random.random() < mutationRate:
-                GA.mutation(shape)
-        new_pop.append(childMask)
+            for shape in childMask.shapes:
+                if random.random() < mutationRate:
+                    GA.mutation(shape)
+                shape.update()
+            new_pop.append(childMask)
 
     for i in range(0, len(new_pop)):
-        print("Change of the mask: %8.3f Number of shapes in the mask: %d" %
-              (new_pop[i].getMaskChange(), len(new_pop[i].shapes)))
-
-    for i in range(0, len(new_pop)):
-        fitness = new_pop[i].calculateFitness(
-            inception, original_images, labels, original_accuracy)  # masked images here
-        print("Fitness: " + f"{fitness:e}")  # <- Prints in scientific notation
+        # apply mask here and update fitness
+        print("running update: " + str(i))
+        new_pop[i].update(inception, original_images,
+                          labels)
+        print("Fitness_new: " + f"{new_pop[i].fitness:e}")  # <- sci-notation
         evaluationBudget -= 1
+
+    print("spawned " + str(len(new_pop)) + " children")
 
     # next generation selection TODO change selection alg
     combined_population = population + new_pop
-    combined_population_fitness = np.empty(2 * populationSize)
+    combined_population_fitness = np.empty(populationSize + len(new_pop))
     for i in range(0, populationSize):
         combined_population_fitness[i] = population[i].fitness
     for i in range(0, len(new_pop)):
@@ -80,3 +81,6 @@ while evaluationBudget > 0:
         max_fitness_index = np.argmax(combined_population_fitness)
         population[i] = combined_population[max_fitness_index]
         combined_population_fitness[max_fitness_index] = 0
+
+    print("End Generation " + str(generation))
+    generation += 1

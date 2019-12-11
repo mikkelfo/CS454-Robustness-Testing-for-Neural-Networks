@@ -18,6 +18,9 @@ class Shape:
         self.area = None                            # Calculation
         self.change = None                          # Calculation
 
+        # call update
+        self.update()
+
     def init_center(self):
         x, y = random.randint(0, self.dim), random.randint(0, self.dim)
         return x, y
@@ -36,7 +39,7 @@ class Shape:
 
         return points
 
-    def create_random_point(self, diff):
+    def create_random_point(self, diff=30):
         xCenter, yCenter = self.centerPoint
         xRange, yRange = [xCenter - diff, xCenter +
                           diff], [yCenter - diff, yCenter + diff]
@@ -47,7 +50,7 @@ class Shape:
 
         # If invalid point (out of range), recursively try again
         if not validate_point((x, y)):
-            return self.create_random_point(diff)
+            return self.create_random_point(diff - 1)
 
         return x, y
 

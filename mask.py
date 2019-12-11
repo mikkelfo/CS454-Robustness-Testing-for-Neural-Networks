@@ -16,11 +16,11 @@ class Mask:
         self.fitness = None                     # Calculated
 
     def mask_change(self):
-        return sum([shape.getShapeChange() for shape in self.shapes])
+        return sum([shape.change for shape in self.shapes])
 
-    def update(self, inception_model, masked_images):
+    def update(self, inception_model, masked_images, labels):
         self.accuracy = fitnessfunction.fitness_value(
-            inception_model, masked_images)
+            inception_model, masked_images, labels)
         self.change = self.mask_change()
         self.fitness = self.accuracy / self.change
 
