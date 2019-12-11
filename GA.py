@@ -110,17 +110,18 @@ def legalRGBValue(RGBValue, RGBRange):
 
     return RGBValue
 
-#takes in the population, how many of the population to enter in the tournament and how many winners to return
+
+# takes in the population, how many of the population to enter in the tournament and how many winners to return
 def tournament(population, tournamentSize, matingPoolSize):
     matingPool = []
-    #fills matingPool until matingPoolSize is reached
-    for i in 0..matingPoolSize:       
-        #selects as many masks from the population as passed in the argument
+    # fills matingPool until matingPoolSize is reached
+    for i in range(0, matingPoolSize):
+        # selects as many masks from the population as passed in the argument
         contestants = random.sample(population, tournamentSize)
         best = contestants[0]
-        #loop through every contestant and save the best one
+        # loop through every contestant and save the best one
         for x in contestants:
             if x.fitness > best.fitness and x not in matingPool:
                 best = x
         matingPool.append(best)
-    return matingPool 
+    return matingPool
