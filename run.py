@@ -36,7 +36,7 @@ for i in range(0, len(population)):
 
 # getFitnessValues
 for i in range(0, len(population)):
-    fitness = population[i].calculateFitness(inception, original_images, labels, original_accuracy) #masked images here !CAUTION! This takes very long(the whole reason we use a GA)
+    fitness = population[i].calculateFitness(inception, original_images, labels, original_accuracy) # masked images here !CAUTION! This takes very long(the whole reason we use a GA)
     # print("Fitness: %.8f" % fitness)
     print("Fitness: " + f"{fitness:e}")  # <- Prints in scientific notation
     evaluationBudget -= 1
@@ -58,6 +58,7 @@ while evaluationBudget > 0:
     for i in range(0, len(new_pop)):
         print("Change of the mask: %8.3f Number of shapes in the mask: %d" %
                (new_pop[i].getMaskChange(), len(new_pop[i].shapes)))
+
 
     for i in range(0, len(new_pop)):
         fitness = new_pop[i].calculateFitness(inception, original_images, labels, original_accuracy) #masked images here
