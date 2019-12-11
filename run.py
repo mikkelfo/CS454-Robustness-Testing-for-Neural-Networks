@@ -2,6 +2,7 @@ import GA
 import fitnessfunction
 import mask
 import random
+import numpy as np
 
 populationSize = 10
 maxShapes = 20
@@ -26,7 +27,7 @@ original_accuracy = fitnessfunction.fitness_value(inception, original_images, la
 print("Original Accuracy: " + f"{original_accuracy:e}")
 
 population = GA.initPopulation(populationSize, maxShapes, shapeSize, maxPoints, imageSize)
-# population.append(mask.Mask([]))
+# population.append(mask.Mask([])) #empty mask breaks calculations
 
 for i in range(0, len(population)):
     print("Change of the mask: %8.3f Number of shapes in the mask: %d" %
@@ -39,17 +40,36 @@ for i in range(0, len(population)):
     print("Fitness: " + f"{fitness:e}")  # <- Prints in scientific notation
     evaluationBudget -= 1
 
-new_pop = []
-for i in population:
-    selection = GA.tournament(population, tournamentSize, matingPoolSize)
-    # selection = random.sample(population, 2) # <- Old random selection
-    childMask = GA.crossover(selection[0], selection[1])
-    for shape in childMask.shapes:
-        if random.random() < mutationRate:
-            GA.mutation(shape)
+#TODO:Elitism selection
 
-    new_pop.append(childMask)
+while evaluationBudget > 0:
 
-for i in range(0, len(new_pop)):
-    print("Change of the mask: %8.3f Number of shapes in the mask: %d" %
-          (new_pop[i].getMaskChange(), len(new_pop[i].shapes)))
+    new_pop = []
+    for i in population:
+        selection = GA.tournament(population, tournamentSize, matingPoolSize)
+        # selection = random.sample(population, 2) # <- Old random selection
+        childMask = GA.crossover(selection[0], selection[1])
+        for shape in childMask.shapes:
+            if random.random() < mutationRate:
+                GA.mutation(shape)
+        new_pop.append(childMask)
+
+    for i in range(0, len(new_pop)):
+        print("Change of the mask: %8.3f Number of shapes in the mask: %d" %
+               (new_pop[i].getMaskChange(), len(new_pop[i].shapes)))
+
+    for i in range(0, len(population)):
+        fitness = new_pop[i].calculateFitness(inception, original_images, labels, original_accuracy) #masked images here
+        print("Fitness: " + f"{fitness:e}")  # <- Prints in scientific notation
+        evaluationBudget -= 1
+
+    combined_population = population + new_pop
+    combined_population_fitness = np.empty(2*populationSize)
+    for i in range(0, populationSize):
+        combined_population_fitness[i] = population[i].fitness
+    for i in range(0, populationSize):
+        combined_population_fitness[i+populationSize] = new_pop[i].fitness
+    for i in range(0, populationSize):
+        max_fitness_index = np.argmax(combined_population_fitness)
+        population[i] = combined_population[max_fitness_index]
+        combined_population_fitness[max_fitness_index] = 0
