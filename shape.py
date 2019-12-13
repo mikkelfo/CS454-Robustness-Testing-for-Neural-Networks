@@ -5,7 +5,7 @@ from operator import itemgetter
 
 
 class Shape:
-    def __init__(self, k, dim=299):
+    def __init__(self, k, dim=298):
         assert 2 <= k <= 9
         assert dim > 0
         self.dim = dim                              # Given
@@ -81,8 +81,8 @@ class Shape:
         return points
 
     def update(self):
-        self.inside = self.get_inside_points()
-        self.area = len(self.inside)
+        self.insidePoints = self.get_inside_points()
+        self.area = len(self.insidePoints)
         self.change = self.area * sum([abs(val) for val in self.changeRGB])
 
     # Moves the shape to random place within the specified limit

@@ -2,6 +2,7 @@ import numpy as np
 import os
 import tensorflow as tf
 from tensorflow import keras
+import timeit
 
 
 def download_base_model():
@@ -69,11 +70,12 @@ def get_labels():
 
 
 def fitness_value(inception_model, masked_images, labels):
+    start = timeit.default_timer()
     number_of_images = 1000
     val_labels = labels
 
     # preprocess images
-    processed_images = np.empty((number_of_images, 299, 299, 3))
+    processed_images = np.zeros((number_of_images, 299, 299, 3))
     for i in range(number_of_images):
         processed_image = preprocess_for_eval(masked_images[i])
         processed_images[i] = processed_image
@@ -82,4 +84,6 @@ def fitness_value(inception_model, masked_images, labels):
     classes = inception_model.predict(processed_images)
     class_numbers = np.argmax(classes, 1)
     accuracy = get_accuracy(val_labels, class_numbers)
+    stop = timeit.default_timer()
+    print("time to calculate fitness for 1 mask: ", stop - start)
     return accuracy

@@ -4,6 +4,22 @@
 		"selected_items":
 		[
 			[
+				"tim",
+				"default_timer\tstatement"
+			],
+			[
+				"de",
+				"default_timer\tstatement"
+			],
+			[
+				"defau",
+				"default_timer\tstatement"
+			],
+			[
+				"origina",
+				"original_accuracy"
+			],
+			[
 				"uin",
 				"uint64_t"
 			],
@@ -498,27 +514,74 @@
 			[
 				"lin",
 				"line"
-			],
-			[
-				"line",
-				"lines"
-			],
-			[
-				"l",
-				"l_count"
-			],
-			[
-				"pri",
-				"price"
-			],
-			[
-				"dis",
-				"discard_5"
 			]
 		]
 	},
 	"buffers":
 	[
+		{
+			"file": "fitnessfunction.py",
+			"settings":
+			{
+				"buffer_size": 2507,
+				"encoding": "UTF-8",
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "GA.py",
+			"settings":
+			{
+				"buffer_size": 3531,
+				"encoding": "UTF-8",
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "edit_images.py",
+			"settings":
+			{
+				"buffer_size": 1020,
+				"encoding": "UTF-8",
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "shape.py",
+			"settings":
+			{
+				"buffer_size": 4379,
+				"encoding": "UTF-8",
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "run.py",
+			"settings":
+			{
+				"buffer_size": 3218,
+				"encoding": "UTF-8",
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "mask.py",
+			"settings":
+			{
+				"buffer_size": 1128,
+				"encoding": "UTF-8",
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "validity.py",
+			"settings":
+			{
+				"buffer_size": 546,
+				"encoding": "UTF-8",
+				"line_ending": "Unix"
+			}
+		}
 	],
 	"build_system": "",
 	"build_system_choices":
@@ -660,6 +723,7 @@
 	],
 	"file_history":
 	[
+		"/C/Users/z5208931/Documents/GitHub/CS454-Robustness-Testing-for-Neural-Networks/.gitignore",
 		"/C/Users/z5208931/Documents/GitHub/kaist-cs341/lab02/KENSv3-master/app/TestTCP/TCPAssignment.hpp",
 		"/C/Users/z5208931/Documents/GitHub/kaist-cs341/lab02/KENSv3-master/app/TestTCP/TCPAssignment.cpp",
 		"/Users/kim_ky/Desktop/cs341/lab02/KENSv3-master/app/TestTCP/testenv.hpp",
@@ -786,8 +850,7 @@
 		"/Users/kim_ky/Desktop/COMP1511/Lab Exercises/WEEK5/farnarkle.c",
 		"/Users/kim_ky/Desktop/COMP1511/Lab Exercises/WEEK7/Week 7 Challenge/punctuated_palindrome/punctuated_palindrome.c",
 		"/Users/kim_ky/Desktop/COMP1511/Lab Exercises/WEEK7/Standard Exercises/palindrome/palindrome.c",
-		"/Users/kim_ky/Desktop/COMP1511/Lab Exercises/WEEK7/Standard Exercises/one_per_line/one_per_line.c",
-		"/Users/kim_ky/Desktop/COMP1511/Lab Exercises/WEEK7/Standard Exercises/first_lines/first_lines.c"
+		"/Users/kim_ky/Desktop/COMP1511/Lab Exercises/WEEK7/Standard Exercises/one_per_line/one_per_line.c"
 	],
 	"find":
 	{
@@ -822,8 +885,226 @@
 	"groups":
 	[
 		{
+			"selected": 4,
 			"sheets":
 			[
+				{
+					"buffer": 0,
+					"file": "fitnessfunction.py",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 2507,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								2468,
+								2468
+							]
+						],
+						"settings":
+						{
+							"git_gutter_is_enabled": false,
+							"syntax": "Packages/Python/Python.sublime-syntax",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 1083.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 4,
+					"type": "text"
+				},
+				{
+					"buffer": 1,
+					"file": "GA.py",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 3531,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								660,
+								660
+							]
+						],
+						"settings":
+						{
+							"git_gutter_is_enabled": false,
+							"syntax": "Packages/Python/Python.sublime-syntax",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 3,
+					"type": "text"
+				},
+				{
+					"buffer": 2,
+					"file": "edit_images.py",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 1020,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								1000,
+								956
+							]
+						],
+						"settings":
+						{
+							"git_gutter_is_enabled": false,
+							"syntax": "Packages/Python/Python.sublime-syntax",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 2,
+					"type": "text"
+				},
+				{
+					"buffer": 3,
+					"file": "shape.py",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 4379,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								190,
+								190
+							]
+						],
+						"settings":
+						{
+							"git_gutter_is_enabled": false,
+							"syntax": "Packages/Python/Python.sublime-syntax",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 1653.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 1,
+					"type": "text"
+				},
+				{
+					"buffer": 4,
+					"file": "run.py",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 3218,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								2308,
+								2308
+							]
+						],
+						"settings":
+						{
+							"git_gutter_is_enabled": false,
+							"syntax": "Packages/Python/Python.sublime-syntax",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 684.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 0,
+					"type": "text"
+				},
+				{
+					"buffer": 5,
+					"file": "mask.py",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 1128,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								730,
+								730
+							]
+						],
+						"settings":
+						{
+							"git_gutter_is_enabled": false,
+							"syntax": "Packages/Python/Python.sublime-syntax",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 5,
+					"type": "text"
+				},
+				{
+					"buffer": 6,
+					"file": "validity.py",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 546,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								425,
+								425
+							]
+						],
+						"settings":
+						{
+							"git_gutter_is_enabled": false,
+							"syntax": "Packages/Python/Python.sublime-syntax",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 6,
+					"type": "text"
+				}
 			]
 		}
 	],

@@ -1,8 +1,9 @@
 import GA
 import fitnessfunction
-import mask
+import edit_images as editor
 import random
 import numpy as np
+import timeit
 
 populationSize = 10
 maxShapes = 20
@@ -11,7 +12,7 @@ maxPoints = 8
 imageSize = 299
 crossoverRate = 0.9
 mutationRate = 0.05
-evaluationBudget = 10000
+evaluationBudget = 10
 download = False
 
 tournamentSize = 4
@@ -34,19 +35,20 @@ population = GA.init_population(populationSize)
 
 # evaluate/update first generation
 for i in range(0, len(population)):
-    # Function can be made instead of direct access -PUT IN FUNCTION?-
-    # first generation will have same accuracy as original as it's a population
-    # of empty masks
-    population[i].accuracy = original_accuracy
-    population[i].change = population[i].mask_change()
-    population[i].fitness = population[i].accuracy / population[i].change
-    print("Fitness: " + f"{population[i].fitness:e}")  # <- Prints sci-notation
-    # we've already used it so not sure if evaluation budget required
-    # evaluationBudget -= 1
+    print("running update: " + str(i))
+    start = timeit.default_timer()
+    population[i].update(inception, editor.apply_mask(
+        original_images, population[i]), labels)
+    stop = timeit.default_timer()
+    print("Fitness: " + f"{population[i].fitness:e}")  # <- sci-notation
+    print("time to run update: ", stop - start)
+    print("Change of the mask: %8.3f Number of shapes in the mask: %d" %
+          (population[i].change, len(population[i].shapes)))
+    evaluationBudget -= 1
 
     generation = 0
 while evaluationBudget > 0:
-    print("Generation: " + str(generation))
+    print("\nGeneration: " + str(generation))
     new_pop = []
 
     selection = GA.tournament(population, tournamentSize, matingPoolSize)
@@ -61,11 +63,15 @@ while evaluationBudget > 0:
             new_pop.append(childMask)
 
     for i in range(0, len(new_pop)):
-        # apply mask here and update fitness
         print("running update: " + str(i))
-        new_pop[i].update(inception, original_images,
-                          labels)
-        print("Fitness_new: " + f"{new_pop[i].fitness:e}")  # <- sci-notation
+        start = timeit.default_timer()
+        new_pop[i].update(inception, editor.apply_mask(
+            original_images, new_pop[i]), labels)
+        stop = timeit.default_timer()
+        print("Fitness: " + f"{new_pop[i].fitness:e}")  # <- sci-notation
+        print("time to run update: ", stop - start)
+        print("Change of the mask: %8.3f Number of shapes in the mask: %d" %
+              (new_pop[i].change, len(new_pop[i].shapes)))
         evaluationBudget -= 1
 
     print("spawned " + str(len(new_pop)) + " children")
