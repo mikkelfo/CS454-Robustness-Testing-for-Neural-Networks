@@ -27,7 +27,7 @@ def preprocess_for_eval(image):
 
 
 def get_accuracy(val_labels, class_numbers):
-    number_of_images = val_labels.size
+    number_of_images = 1000
     number_of_correct = 0
     for i in range(number_of_images):
         if val_labels[i] == class_numbers[i]:
