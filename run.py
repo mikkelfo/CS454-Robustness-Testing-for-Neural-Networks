@@ -7,7 +7,10 @@ import timeit
 import pickle
 import copy
 
-populationSize = 20
+# data persistence
+import pickle
+
+populationSize = 10
 maxShapes = 20
 shapeSize = 25
 maxPoints = 8
@@ -94,6 +97,7 @@ while evaluationBudget > 0:
     print("End Generation " + str(generation))
     generation += 1
 
+    # save out best of generation
     with open('best_mask', 'wb') as output:
         pickle.dump(population[0], output, -1)
 
