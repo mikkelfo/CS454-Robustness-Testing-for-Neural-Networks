@@ -17,18 +17,7 @@ def apply_mask(images, mask):
         images[i] += matrix
 
     # Adjust all affected pixels to range(0, 255)
-    for j in range(len(images)):
-        row, col, idx = np.nonzero(images[j] < 0)
-        for i in range(len(row)):
-            images[j][row[i]][col[i]][idx[i]] = 0
-            # images[j] is a singular image
-            # row[i] is the row number
-            # col[i] is the column number
-            # idx[i] is the index
-
-        row, col, idx = np.nonzero(images[j] > 255)
-        for i in range(len(row)):
-            images[j][row[i]][col[i]][idx[i]] = 255
+    images = np.clip(images, 0, 255, images)
     stop = timeit.default_timer()
     print("time to apply masks: ", stop - start)
 

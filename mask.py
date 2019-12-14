@@ -18,11 +18,12 @@ class Mask:
     def mask_change(self):
         return sum([shape.change for shape in self.shapes])
 
-    def update(self, inception_model, masked_images, labels):
+    def update(self, inception_model, masked_images, labels, original_accuracy):
         self.accuracy = fitnessfunction.fitness_value(
             inception_model, masked_images, labels)
+        print(self.accuracy)
         self.change = self.mask_change()
-        self.fitness = self.accuracy / self.change
+        self.fitness = (original_accuracy - self.accuracy) / self.change
 
     @staticmethod
     def init_shapes(maxShapes=5, maxPoints=9):

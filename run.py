@@ -38,7 +38,7 @@ for i in range(0, len(population)):
     print("running update: " + str(i))
     start = timeit.default_timer()
     population[i].update(inception, editor.apply_mask(
-        original_images, population[i]), labels)
+        original_images, population[i]), labels, original_accuracy)
     stop = timeit.default_timer()
     print("Fitness: " + f"{population[i].fitness:e}")  # <- sci-notation
     print("time to run update: ", stop - start)

@@ -3,6 +3,7 @@ import os
 import tensorflow as tf
 from tensorflow import keras
 import timeit
+import copy
 
 
 def download_base_model():
@@ -18,10 +19,11 @@ def download_base_model():
 
 
 def preprocess_for_eval(image):
-    image /= 255.
-    image -= 0.5
-    image *= 2.
-    return image
+    imagecopy = copy.deepcopy(image)
+    imagecopy /= 255.
+    imagecopy -= 0.5
+    imagecopy *= 2.
+    return imagecopy
 
 
 def get_accuracy(val_labels, class_numbers):
