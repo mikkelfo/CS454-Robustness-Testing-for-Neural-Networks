@@ -5,7 +5,7 @@ from operator import itemgetter
 
 
 class Shape:
-    def __init__(self, k, dim=298):
+    def __init__(self, k, dim=299):
         assert 2 <= k <= 9
         assert dim > 0
         self.dim = dim                              # Given
@@ -14,7 +14,7 @@ class Shape:
         self.changeRGB = self.init_RGB()             # Random initialization
 
         # Below values are set to None, so our program cant run, e.g. call Shape.area, before Shape.update() is called
-        self.insidePoints = None                          # Calculation
+        self.insidePoints = None                    # Calculation
         self.area = None                            # Calculation
         self.change = None                          # Calculation
 
@@ -22,7 +22,7 @@ class Shape:
         self.update()
 
     def init_center(self):
-        x, y = random.randint(0, self.dim), random.randint(0, self.dim)
+        x, y = random.randrange(0, self.dim), random.randrange(0, self.dim)
         return x, y
 
     def init_points(self, k, diff=30):

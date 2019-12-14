@@ -1,6 +1,5 @@
 from scipy.spatial import Delaunay
 
-
 def validate(listOfPoints):
     if validate_list(listOfPoints):
         try:
@@ -19,7 +18,7 @@ def validate_list(listOfPoints):
     return True
 
 
-def validate_point(point, dim=298):
+def validate_point(point, dim=299):
     x, y = point
     if x in range(0, dim) and y in range(0, dim):
         return True
