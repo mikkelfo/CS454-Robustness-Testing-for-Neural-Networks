@@ -4,19 +4,22 @@ import edit_images as editor
 import random
 import numpy as np
 import timeit
+import pickle
+import copy
 
-populationSize = 10
+populationSize = 20
 maxShapes = 20
 shapeSize = 25
 maxPoints = 8
 imageSize = 299
 crossoverRate = 0.9
 mutationRate = 0.05
-evaluationBudget = 20
-download = False
+evaluationBudget = 10000
 
 tournamentSize = 4
-matingPoolSize = 2
+matingPoolSize = 10  # has to be even
+
+download = False
 
 if download:
     fitnessfunction.download_base_model()
@@ -38,7 +41,7 @@ for i in range(0, len(population)):
     print("running update: " + str(i))
     start = timeit.default_timer()
     population[i].update(inception, editor.apply_mask(
-        original_images, population[i]), labels, original_accuracy)
+        copy.deepcopy(original_images), population[i]), labels, original_accuracy)
     stop = timeit.default_timer()
     print("Fitness: " + f"{population[i].fitness:e}")  # <- sci-notation
     print("time to run update: ", stop - start)
@@ -65,8 +68,8 @@ while evaluationBudget > 0:
     for i in range(0, len(new_pop)):
         print("running update: " + str(i))
         start = timeit.default_timer()
-        new_pop[i].update(inception, editor.apply_mask(
-            original_images, new_pop[i]), labels, original_accuracy)
+        new_pop[i].update(inception, editor.apply_mask(copy.deepcopy(
+            original_images), new_pop[i]), labels, original_accuracy)
         stop = timeit.default_timer()
         print("Fitness: " + f"{new_pop[i].fitness:e}")  # <- sci-notation
         print("time to run update: ", stop - start)
@@ -90,3 +93,12 @@ while evaluationBudget > 0:
 
     print("End Generation " + str(generation))
     generation += 1
+
+    with open('best_mask', 'wb') as output:
+        pickle.dump(population[0], output, -1)
+
+print("\nBest Mask: ")
+print("Fitness: " + f"{population[0].fitness:e}")  # <- sci-notation
+print("Accuracy: " + f"{population[0].accuracy:e}")  # <- sci-notation
+print("Change of the mask: %8.3f Number of shapes in the mask: %d" %
+      (population[0].change, len(population[0].shapes)))
