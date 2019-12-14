@@ -5,6 +5,9 @@ import random
 import numpy as np
 import timeit
 
+# data persistence
+import pickle
+
 populationSize = 10
 maxShapes = 20
 shapeSize = 25
@@ -90,3 +93,13 @@ while evaluationBudget > 0:
 
     print("End Generation " + str(generation))
     generation += 1
+
+    # save out best of generation
+    with open('best_mask', 'wb') as output:
+        pickle.dump(population[0], output, -1)
+
+print("\nBest Mask: ")
+print("Fitness: " + f"{population[0].fitness:e}")  # <- sci-notation
+print("Accuracy: " + f"{population[0].accuracy:e}")  # <- sci-notation
+print("Change of the mask: %8.3f Number of shapes in the mask: %d" %
+      (population[0].change, len(population[0].shapes)))
