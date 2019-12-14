@@ -50,7 +50,7 @@ class Shape:
 
         # If invalid point (out of range), recursively try again
         if not validate_point((x, y)):
-            return self.create_random_point(diff - 1)
+            return self.create_random_point(diff)
 
         return x, y
 
