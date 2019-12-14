@@ -12,7 +12,7 @@ maxPoints = 8
 imageSize = 299
 crossoverRate = 0.9
 mutationRate = 0.05
-evaluationBudget = 10
+evaluationBudget = 20
 download = False
 
 tournamentSize = 4
@@ -66,7 +66,7 @@ while evaluationBudget > 0:
         print("running update: " + str(i))
         start = timeit.default_timer()
         new_pop[i].update(inception, editor.apply_mask(
-            original_images, new_pop[i]), labels)
+            original_images, new_pop[i]), labels, original_accuracy)
         stop = timeit.default_timer()
         print("Fitness: " + f"{new_pop[i].fitness:e}")  # <- sci-notation
         print("time to run update: ", stop - start)
