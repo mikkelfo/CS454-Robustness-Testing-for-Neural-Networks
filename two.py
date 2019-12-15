@@ -2,21 +2,15 @@ import GA
 import fitnessfunction
 import edit_images as editor
 import random
-import numpy as np
 import pickle
 import copy
 
-populationSize = 50
-maxShapes = 50
-shapeSize = 25
-maxPoints = 8
+populationSize = 100
 imageSize = 299
 crossoverRate = 0.9
 mutationRate = 0.1
-evaluationBudget = 1000
-
-tournamentSize = 4
-matingPoolSize = 2#has to be even
+# evaluation budget = population size + generations required
+evaluationBudget = populationSize + 100
 
 download = False
 
@@ -49,8 +43,7 @@ for i in range(0, len(population)):
 while evaluationBudget > 0:
     new_pop = []
 
-    #selection = GA.tournament(population, tournamentSize, matingPoolSize)
-    selection = random.sample(population, 2)# <- Old random selection
+    selection = random.sample(population, 2)
     for i in range(0, len(selection), 2):
         if random.random() < crossoverRate:
             childMask = GA.crossover(selection[i], selection[i + 1])
