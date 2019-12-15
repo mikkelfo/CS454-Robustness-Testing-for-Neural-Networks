@@ -20,7 +20,7 @@ def init_population(popSize):
 def crossover(parent1, parent2):
     # Number of shapes from parents
     n = random.randint(1, len(parent1.shapes))
-    m = random.randint(1, len(parent2.shapes))
+    m = random.randint(0, len(parent2.shapes))
 
     # Adds parent genes to child
     child = []

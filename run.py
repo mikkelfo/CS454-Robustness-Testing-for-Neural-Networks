@@ -3,24 +3,20 @@ import fitnessfunction
 import edit_images as editor
 import random
 import numpy as np
-import timeit
-import pickle
 import copy
 
 # data persistence
 import pickle
 
-populationSize = 10
-maxShapes = 20
+populationSize = 50
 shapeSize = 25
-maxPoints = 8
 imageSize = 299
 crossoverRate = 0.9
-mutationRate = 0.05
+mutationRate = 0.25
 evaluationBudget = 10000
 
-tournamentSize = 4
-matingPoolSize = 10  # has to be even
+tournamentSize = 20
+matingPoolSize = 14  # must be even
 
 download = False
 
@@ -41,13 +37,10 @@ population = GA.init_population(populationSize)
 
 # evaluate/update first generation
 for i in range(0, len(population)):
-    print("running update: " + str(i))
-    start = timeit.default_timer()
+    print("\nrunning update: " + str(i))
     population[i].update(inception, editor.apply_mask(
         copy.deepcopy(original_images), population[i]), labels, original_accuracy)
-    stop = timeit.default_timer()
     print("Fitness: " + f"{population[i].fitness:e}")  # <- sci-notation
-    print("time to run update: ", stop - start)
     print("Change of the mask: %8.3f Number of shapes in the mask: %d" %
           (population[i].change, len(population[i].shapes)))
     evaluationBudget -= 1
@@ -69,13 +62,9 @@ while evaluationBudget > 0:
             new_pop.append(childMask)
 
     for i in range(0, len(new_pop)):
-        print("running update: " + str(i))
-        start = timeit.default_timer()
         new_pop[i].update(inception, editor.apply_mask(copy.deepcopy(
             original_images), new_pop[i]), labels, original_accuracy)
-        stop = timeit.default_timer()
         print("Fitness: " + f"{new_pop[i].fitness:e}")  # <- sci-notation
-        print("time to run update: ", stop - start)
         print("Change of the mask: %8.3f Number of shapes in the mask: %d" %
               (new_pop[i].change, len(new_pop[i].shapes)))
         evaluationBudget -= 1
