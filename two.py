@@ -6,17 +6,17 @@ import numpy as np
 import pickle
 import copy
 
-populationSize = 20
-maxShapes = 20
+populationSize = 50
+maxShapes = 50
 shapeSize = 25
 maxPoints = 8
 imageSize = 299
 crossoverRate = 0.9
-mutationRate = 0.05
-evaluationBudget = 10000
+mutationRate = 0.1
+evaluationBudget = 1000
 
 tournamentSize = 4
-matingPoolSize = 10#has to be even
+matingPoolSize = 2#has to be even
 
 download = False
 
@@ -47,22 +47,22 @@ for i in range(0, len(population)):
 
     generation = 0
 while evaluationBudget > 0:
-    print("\nGeneration: " + str(generation))
     new_pop = []
 
-    selection = GA.tournament(population, tournamentSize, matingPoolSize)
+    #selection = GA.tournament(population, tournamentSize, matingPoolSize)
+    selection = random.sample(population, 2)# <- Old random selection
     for i in range(0, len(selection), 2):
-        # selection = random.sample(population, 2) # <- Old random selection
         if random.random() < crossoverRate:
             childMask = GA.crossover(selection[i], selection[i + 1])
-            for shape in childMask.shapes:
-                if random.random() < mutationRate:
-                    GA.mutation(shape)
-                shape.update()
-            new_pop.append(childMask)
+        else:
+            childMask = selection[0]
+        for shape in childMask.shapes:
+            if random.random() < mutationRate:
+                GA.mutation(shape)
+            shape.update()
+        new_pop.append(childMask)
 
     for i in range(0, len(new_pop)):
-        print("running update: " + str(i))
         new_pop[i].update(inception, editor.apply_mask(
             copy.deepcopy(original_images), new_pop[i]), labels, original_accuracy)
         print("Fitness: " + f"{new_pop[i].fitness:e}")  # <- sci-notation
@@ -70,28 +70,27 @@ while evaluationBudget > 0:
               (new_pop[i].change, len(new_pop[i].shapes)))
         evaluationBudget -= 1
 
-    print("spawned " + str(len(new_pop)) + " children")
-
     # next generation selection TODO change selection alg
-    combined_population = population + new_pop
-    combined_population_fitness = np.empty(populationSize + len(new_pop))
-    for i in range(0, populationSize):
-        combined_population_fitness[i] = population[i].fitness
-    for i in range(0, len(new_pop)):
-        combined_population_fitness[i + populationSize] = new_pop[i].fitness
-    for i in range(0, populationSize):
-        max_fitness_index = np.argmax(combined_population_fitness)
-        population[i] = combined_population[max_fitness_index]
-        combined_population_fitness[max_fitness_index] = 0
+    if (new_pop):
+        comparable = True
+        dominator = False
+        for i in range(0, len(population)):
+            if (population[i].accuracy > new_pop[0].accuracy and population[i].change > new_pop[0].change):
+                population[i] = new_pop[0]
+                comparable = False
+                dominator = True
+            else:
+                if (population[i].accuracy < new_pop[0].accuracy and population[i].change < new_pop[0].change):
+                    comparable = False
+        if (comparable):
+            population.append(new_pop[0])
+            print("comparable")
+        if (dominator):
+            population = [x for x in population if not (new_pop[0].accuracy < x.accuracy and new_pop[0].change < x.change)]
+            print("dominator")
 
-    print("End Generation " + str(generation))
+    print("End Generation " + str(generation) + " with population of:" + str(len(population)))
     generation += 1
 
-    with open('best_mask', 'wb') as output:
+    with open('pareto_pop', 'wb') as output:
         pickle.dump(population[0], output, -1)
-
-print("\nBest Mask: ")
-print("Fitness: " + f"{population[0].fitness:e}")  # <- sci-notation
-print("Accuracy: " + f"{population[0].accuracy:e}")  # <- sci-notation
-print("Change of the mask: %8.3f Number of shapes in the mask: %d" %
-      (population[0].change, len(population[0].shapes)))

@@ -72,7 +72,6 @@ def get_labels():
 
 
 def fitness_value(inception_model, masked_images, labels):
-    start = timeit.default_timer()
     number_of_images = 1000
     val_labels = labels
 
@@ -86,6 +85,4 @@ def fitness_value(inception_model, masked_images, labels):
     classes = inception_model.predict(processed_images)
     class_numbers = np.argmax(classes, 1)
     accuracy = get_accuracy(val_labels, class_numbers)
-    stop = timeit.default_timer()
-    print("time to calculate fitness for 1 mask: ", stop - start)
     return accuracy

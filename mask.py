@@ -26,6 +26,6 @@ class Mask:
         self.fitness = (original_accuracy - self.accuracy) / self.change
 
     @staticmethod
-    def init_shapes(maxShapes=5, maxPoints=9):
+    def init_shapes(maxShapes=40, maxPoints=9):
         nrOfShapes = random.randint(1, maxShapes)
         return [Shape(random.randint(2, maxPoints)) for _ in range(nrOfShapes)]

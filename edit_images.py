@@ -5,7 +5,6 @@ import timeit
 def apply_mask(images, mask):
 
     # Constructs Mask matrix
-    start = timeit.default_timer()
     matrix = np.zeros((299, 299, 3))
     for shape in mask.shapes:
         change = shape.changeRGB
@@ -18,7 +17,5 @@ def apply_mask(images, mask):
 
     # Adjust all affected pixels to range(0, 255)
     images = np.clip(images, 0, 255, images)
-    stop = timeit.default_timer()
-    print("time to apply masks: ", stop - start)
 
     return images
