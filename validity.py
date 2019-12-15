@@ -1,6 +1,5 @@
 from scipy.spatial import Delaunay
 
-
 def validate(listOfPoints):
     if validate_list(listOfPoints):
         try:

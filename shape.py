@@ -14,7 +14,7 @@ class Shape:
         self.changeRGB = self.init_RGB()             # Random initialization
 
         # Below values are set to None, so our program cant run, e.g. call Shape.area, before Shape.update() is called
-        self.insidePoints = None                          # Calculation
+        self.insidePoints = None                    # Calculation
         self.area = None                            # Calculation
         self.change = None                          # Calculation
 
