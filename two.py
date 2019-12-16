@@ -79,9 +79,8 @@ while evaluationBudget > 0:
                     comparable = False
         if (dominator):
             print("dominator")
-            for i in reversed(range(0, len(population))):
-                if (new_pop[0].accuracy < population[i].accuracy and new_pop[0].change < population[i].change):
-                    del population[i]
+            population = [x for x in population if not (
+                new_pop[0].accuracy < x.accuracy and new_pop[0].change < x.change)]
             population.append(new_pop[0])
         if (comparable):
             population.append(new_pop[0])
