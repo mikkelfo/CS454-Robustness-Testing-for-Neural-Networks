@@ -42,8 +42,10 @@ for i in range(0, len(population)):
     generation = 0
 while evaluationBudget > 0:
     new_pop = []
-
-    selection = random.sample(population, 2)
+    if (len(population) >= 2):
+        selection = random.sample(population, 2)
+    else:
+        selction = population.append(population[0])
     for i in range(0, len(selection), 2):
         if random.random() < crossoverRate:
             childMask = GA.crossover(selection[i], selection[i + 1])
@@ -63,25 +65,26 @@ while evaluationBudget > 0:
               (new_pop[i].change, len(new_pop[i].shapes)))
         evaluationBudget -= 1
 
-    # next generation selection TODO change selection alg
     if (new_pop):
         comparable = True
         dominator = False
         for i in range(0, len(population)):
             if (population[i].accuracy > new_pop[0].accuracy and population[i].change > new_pop[0].change):
-                population[i] = new_pop[0]
                 comparable = False
                 dominator = True
+                break
             else:
                 if (population[i].accuracy < new_pop[0].accuracy and population[i].change < new_pop[0].change):
                     comparable = False
+        if (dominator):
+            print("dominator")
+            for i in reversed(range(0, len(population))):
+                if (new_pop[0].accuracy < population[i].accuracy and new_pop[0].change < population[i].change):
+                    del population[i]
+            population.append(new_pop[0])
         if (comparable):
             population.append(new_pop[0])
             print("comparable")
-        if (dominator):
-            population = [x for x in population if not (
-                new_pop[0].accuracy < x.accuracy and new_pop[0].change < x.change)]
-            print("dominator")
 
     print("End Generation " + str(generation) +
           " with population of:" + str(len(population)))

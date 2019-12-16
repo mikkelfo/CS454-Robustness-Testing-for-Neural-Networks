@@ -8,7 +8,7 @@ read.close()
 
 xAccuracy = []
 yChange = []
-for ind in read:
+for ind in population:
     xAccuracy.append(ind.accuracy)
     yChange.append(ind.change)
 
