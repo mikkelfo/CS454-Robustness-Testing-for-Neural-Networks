@@ -10,7 +10,7 @@ imageSize = 299
 crossoverRate = 0.9
 mutationRate = 0.1
 # evaluation budget = population size + generations required
-evaluationBudget = populationSize + 100
+evaluationBudget = populationSize + 500
 
 download = False
 
