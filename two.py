@@ -10,7 +10,7 @@ imageSize = 299
 crossoverRate = 0.9
 mutationRate = 0.1
 # evaluation budget = population size + generations required
-evaluationBudget = populationSize + 100
+evaluationBudget = populationSize + 500
 
 download = False
 
@@ -28,6 +28,9 @@ print("Original Accuracy: " + f"{original_accuracy:e}")
 
 # initialise empty mask population
 population = GA.init_population(populationSize)
+
+# open file for pareto population
+output = open('pareto_pop', 'wb')
 
 # evaluate/update first generation
 for i in range(0, len(population)):
@@ -79,11 +82,14 @@ while evaluationBudget > 0:
             population.append(new_pop[0])
             print("comparable")
         if (dominator):
-            population = [x for x in population if not (new_pop[0].accuracy < x.accuracy and new_pop[0].change < x.change)]
+            population = [x for x in population if not (
+                new_pop[0].accuracy < x.accuracy and new_pop[0].change < x.change)]
             print("dominator")
 
-    print("End Generation " + str(generation) + " with population of:" + str(len(population)))
+    print("End Generation " + str(generation) +
+          " with population of:" + str(len(population)))
     generation += 1
 
-    with open('pareto_pop', 'wb') as output:
-        pickle.dump(population[0], output, -1)
+    pickle.dump(population[0], output, -1)
+
+output.close()
