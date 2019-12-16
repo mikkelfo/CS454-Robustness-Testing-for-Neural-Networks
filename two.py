@@ -42,6 +42,7 @@ for i in range(0, len(population)):
     generation = 0
 while evaluationBudget > 0:
     new_pop = []
+    selection = []
     if (len(population) >= 2):
         selection = random.sample(population, 2)
     else:
