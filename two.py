@@ -10,7 +10,7 @@ imageSize = 299
 crossoverRate = 0.9
 mutationRate = 0.1
 # evaluation budget = population size + generations required
-evaluationBudget = populationSize + 500
+evaluationBudget = populationSize + 100
 
 download = False
 
@@ -28,9 +28,6 @@ print("Original Accuracy: " + f"{original_accuracy:e}")
 
 # initialise empty mask population
 population = GA.init_population(populationSize)
-
-# open file for pareto population
-output = open('pareto_pop', 'wb')
 
 # evaluate/update first generation
 for i in range(0, len(population)):
@@ -90,6 +87,6 @@ while evaluationBudget > 0:
           " with population of:" + str(len(population)))
     generation += 1
 
-    pickle.dump(population[0], output, -1)
-
-output.close()
+    # open file for pareto population
+    with open('pareto_pop', 'wb') as output:
+        pickle.dump(population, output, -1)
