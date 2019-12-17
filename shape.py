@@ -5,26 +5,27 @@ from operator import itemgetter
 
 
 class Shape:
-    def __init__(self, k, dim=299):
+    #initialize a shape
+    def __init__(self, k, dim=299, diff=30):
         assert 2 <= k <= 9
         assert dim > 0
-        self.dim = dim                              # Given
-        self.centerPoint = self.init_center()        # Random initialization
-        self.listOfPoints = self.init_points(k)      # Random initialization
-        self.changeRGB = self.init_RGB()             # Random initialization
+        self.dim = dim
+        self.centerPoint = self.init_center()         # Random initialization
+        self.listOfPoints = self.init_points(k, diff) # Random initialization
+        self.changeRGB = self.init_RGB()              # Random initialization
 
-        # Below values are set to None, so our program cant run, e.g. call Shape.area, before Shape.update() is called
-        self.insidePoints = None                    # Calculation
-        self.area = None                            # Calculation
-        self.change = None                          # Calculation
-
-        # call update
+        # Below values are first set to None and are set in Shape.update
+        self.insidePoints = None                      # Calculated later
+        self.area = None                              # Calculated later
+        self.change = None                            # Calculated later
         self.update()
 
+    #get a random center point
     def init_center(self):
         x, y = random.randrange(0, self.dim), random.randrange(0, self.dim)
         return x, y
 
+    #get random points with a maximum of k points and minimum of 2 points
     def init_points(self, k, diff=30):
         r = random.randint(2, k)
         points = [self.centerPoint]
@@ -39,6 +40,7 @@ class Shape:
 
         return points
 
+    #create a random point around the center point with a maximum distance of diff in each dimension
     def create_random_point(self, diff=30):
         xCenter, yCenter = self.centerPoint
         xRange, yRange = [xCenter - diff, xCenter +
@@ -54,10 +56,12 @@ class Shape:
 
         return x, y
 
+    #get a RGB change
     @staticmethod
     def init_RGB():
         return random.sample(range(-255, 255), 3)
 
+    #returns pixel within the shape
     def get_inside_points(self):
         def _in_hull(p):
             return hull.find_simplex(p) >= 0
@@ -80,6 +84,7 @@ class Shape:
 
         return points
 
+    #updates insidePoints, area, and change
     def update(self):
         self.insidePoints = self.get_inside_points()
         self.area = len(self.insidePoints)
