@@ -1,9 +1,7 @@
 import numpy as np
-import timeit
 
-
+#apply the mask to the images (changes the images!)
 def apply_mask(images, mask):
-
     # Constructs Mask matrix
     matrix = np.zeros((299, 299, 3))
     for shape in mask.shapes:
