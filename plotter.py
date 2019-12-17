@@ -2,6 +2,7 @@ import matplotlib.pyplot as plt
 import pickle
 from mask import Mask
 
+
 #read population
 read = open('pareto_pop', 'rb')
 population = pickle.load(read)

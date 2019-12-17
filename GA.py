@@ -3,6 +3,7 @@ from numpy.random import choice
 from mask import Mask
 
 
+#initialize population for the GA
 def init_population(popSize):
     population = []
 
@@ -14,7 +15,6 @@ def init_population(popSize):
         population.append(indv)
 
     return population
-
 
 # Picks n, m of parents' shapes to pass to child
 def crossover(parent1, parent2):
@@ -28,7 +28,6 @@ def crossover(parent1, parent2):
     child += random.sample(parent2.shapes, m)
 
     return Mask(child)
-
 
 # Mutation, when called, will always mutate at least ONE thing and up to five.
 def mutation(shape, prob=None):
@@ -77,7 +76,6 @@ def mutation(shape, prob=None):
         if 3 in RBGToChangeSet:
             shape.changeRGB[2] = _legal_RGB_value(shape.changeRGB[2], RGBRange)
 
-
 # Returns a RGB value that is within the given range. If RGB is close to min or max, the function
 # will dynamically adjust. Example if value is 253 and range is 20, the function will pick random number between
 # [-18, 2] as to not go out of bounds.
@@ -96,7 +94,6 @@ def _legal_RGB_value(RGBValue, RGBRange):
                                    (RGBRange / 2) + ((RGBRange / 2) - rDiffFromMin))
 
     return RGBValue
-
 
 # takes in the population, how many of the population to enter in the tournament and how many winners to return
 def tournament(population, tournamentSize, matingPoolSize):
