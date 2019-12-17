@@ -6,6 +6,7 @@ import timeit
 import copy
 
 
+#download inception model
 def download_base_model():
     if not os.path.isdir('neuralNetwork'):
         os.mkdir('neuralNetwork')
@@ -17,7 +18,7 @@ def download_base_model():
     base_model.save(model_path)
     print("Model downloaded!")
 
-
+#return a (for NN) preprocessed copy of the images
 def preprocess_for_eval(image):
     imagecopy = copy.deepcopy(image)
     imagecopy /= 255.
@@ -25,7 +26,7 @@ def preprocess_for_eval(image):
     imagecopy *= 2.
     return imagecopy
 
-
+#calculate accuracy with labels
 def get_accuracy(val_labels, class_numbers):
     number_of_images = 1000
     number_of_correct = 0
@@ -35,7 +36,7 @@ def get_accuracy(val_labels, class_numbers):
     accuracy = number_of_correct / number_of_images
     return accuracy
 
-
+#get images from directory
 def get_images():
     number_of_images = 1000
 
@@ -52,13 +53,13 @@ def get_images():
     images = image_generator.next()
     return images
 
-
+#read model from file
 def load_model():
     inception = keras.models.load_model(
         'neuralNetwork/inceptionv3_base_model.hdf5', compile=False)
     return inception
 
-
+#get labels from file, keras.txt contains number -> class name
 def get_labels():
     number_of_images = 1000
     # read labels from file
@@ -70,7 +71,7 @@ def get_labels():
     val_labels = np.asarray(val_labels_list)
     return val_labels
 
-
+#fitness_value of the model(accuracy)
 def fitness_value(inception_model, masked_images, labels):
     number_of_images = 1000
     val_labels = labels
