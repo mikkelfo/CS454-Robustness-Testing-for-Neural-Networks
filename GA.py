@@ -95,6 +95,7 @@ def _legal_RGB_value(RGBValue, RGBRange):
 
     return RGBValue
 
+#not used anymore
 # takes in the population, how many of the population to enter in the tournament and how many winners to return
 def tournament(population, tournamentSize, matingPoolSize):
     matingPool = []

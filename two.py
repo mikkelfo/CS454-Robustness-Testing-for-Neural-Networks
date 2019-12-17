@@ -5,6 +5,7 @@ import random
 import pickle
 import copy
 
+
 populationSize = 100
 imageSize = 299
 crossoverRate = 0.9
@@ -12,11 +13,12 @@ mutationRate = 0.1
 # evaluation budget = population size + generations required
 evaluationBudget = populationSize + 500
 
+#download model if necessary
 download = False
-
 if download:
     fitnessfunction.download_base_model()
 
+#get model, images, label
 inception = fitnessfunction.load_model()
 original_images = fitnessfunction.get_images()
 labels = fitnessfunction.get_labels()
@@ -39,7 +41,8 @@ for i in range(0, len(population)):
           (population[i].change, len(population[i].shapes)))
     evaluationBudget -= 1
 
-    generation = 0
+#get 1 new child from random parents
+    generation = 1
 while evaluationBudget > 0:
     new_pop = []
     selection = []
@@ -66,6 +69,7 @@ while evaluationBudget > 0:
               (new_pop[i].change, len(new_pop[i].shapes)))
         evaluationBudget -= 1
 
+    #compare new child with poulation
     if (new_pop):
         comparable = True
         dominator = False
