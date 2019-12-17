@@ -1,5 +1,6 @@
 from scipy.spatial import Delaunay
 
+
 #validate if listOfPoints is within the dimensions and results in a valid convex hull
 def validate(listOfPoints):
     if validate_list(listOfPoints):

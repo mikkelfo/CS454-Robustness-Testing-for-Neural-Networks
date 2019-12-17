@@ -1,5 +1,6 @@
 import numpy as np
 
+
 #apply the mask to the images (changes the images!)
 def apply_mask(images, mask):
     # Constructs Mask matrix

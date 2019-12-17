@@ -6,6 +6,7 @@ import edit_images as editor
 import copy
 import numpy as np
 
+
 #read population
 read = open('pareto_pop', 'rb')
 population = pickle.load(read)
