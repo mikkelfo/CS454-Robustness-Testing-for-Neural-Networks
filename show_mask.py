@@ -6,7 +6,7 @@ import edit_images as editor
 import copy
 import numpy as np
 
-read = open('pareto_pop3040', 'rb')
+read = open('results\pop200\shapes_40_diff_40\pareto_pop', 'rb')
 population = pickle.load(read)
 read.close()
 
@@ -14,7 +14,7 @@ inception = fitnessfunction.load_model()
 original_images = fitnessfunction.get_images()
 labels = fitnessfunction.get_labels()
 
-img_number = 582
+img_number = 0
 number_of_images = 1000
 
 processed_images = np.zeros((number_of_images, 299, 299, 3))
