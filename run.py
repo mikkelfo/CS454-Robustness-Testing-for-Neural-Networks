@@ -2,27 +2,23 @@ import GA
 import fitnessfunction
 import edit_images as editor
 import random
-import numpy as np
+import pickle
 import copy
 
-# data persistence
-import pickle
 
-populationSize = 50
-shapeSize = 25
+populationSize = 100
 imageSize = 299
 crossoverRate = 0.9
-mutationRate = 0.25
-evaluationBudget = 10000
+mutationRate = 0.1
+# evaluation budget = population size + generations required
+evaluationBudget = populationSize + 500
 
-tournamentSize = 20
-matingPoolSize = 14  # must be even
-
+#download model if necessary
 download = False
-
 if download:
     fitnessfunction.download_base_model()
 
+#get model, images, label
 inception = fitnessfunction.load_model()
 original_images = fitnessfunction.get_images()
 labels = fitnessfunction.get_labels()
@@ -37,7 +33,7 @@ population = GA.init_population(populationSize)
 
 # evaluate/update first generation
 for i in range(0, len(population)):
-    print("\nrunning update: " + str(i))
+    print("running update: " + str(i))
     population[i].update(inception, editor.apply_mask(
         copy.deepcopy(original_images), population[i]), labels, original_accuracy)
     print("Fitness: " + f"{population[i].fitness:e}")  # <- sci-notation
@@ -45,53 +41,59 @@ for i in range(0, len(population)):
           (population[i].change, len(population[i].shapes)))
     evaluationBudget -= 1
 
-    generation = 0
+#get 1 new child from random parents
+    generation = 1
 while evaluationBudget > 0:
-    print("\nGeneration: " + str(generation))
     new_pop = []
-
-    selection = GA.tournament(population, tournamentSize, matingPoolSize)
+    selection = []
+    if (len(population) >= 2):
+        selection = random.sample(population, 2)
+    else:
+        selction = population.append(population[0])
     for i in range(0, len(selection), 2):
-        # selection = random.sample(population, 2) # <- Old random selection
         if random.random() < crossoverRate:
             childMask = GA.crossover(selection[i], selection[i + 1])
-            for shape in childMask.shapes:
-                if random.random() < mutationRate:
-                    GA.mutation(shape)
-                shape.update()
-            new_pop.append(childMask)
+        else:
+            childMask = selection[0]
+        for shape in childMask.shapes:
+            if random.random() < mutationRate:
+                GA.mutation(shape)
+            shape.update()
+        new_pop.append(childMask)
 
     for i in range(0, len(new_pop)):
-        new_pop[i].update(inception, editor.apply_mask(copy.deepcopy(
-            original_images), new_pop[i]), labels, original_accuracy)
+        new_pop[i].update(inception, editor.apply_mask(
+            copy.deepcopy(original_images), new_pop[i]), labels, original_accuracy)
         print("Fitness: " + f"{new_pop[i].fitness:e}")  # <- sci-notation
         print("Change of the mask: %8.3f Number of shapes in the mask: %d" %
               (new_pop[i].change, len(new_pop[i].shapes)))
         evaluationBudget -= 1
 
-    print("spawned " + str(len(new_pop)) + " children")
+    #compare new child with poulation
+    if (new_pop):
+        comparable = True
+        dominator = False
+        for i in range(0, len(population)):
+            if (population[i].accuracy > new_pop[0].accuracy and population[i].change > new_pop[0].change):
+                comparable = False
+                dominator = True
+                break
+            else:
+                if (population[i].accuracy < new_pop[0].accuracy and population[i].change < new_pop[0].change):
+                    comparable = False
+        if (dominator):
+            print("dominator")
+            population = [x for x in population if not (
+                new_pop[0].accuracy < x.accuracy and new_pop[0].change < x.change)]
+            population.append(new_pop[0])
+        if (comparable):
+            population.append(new_pop[0])
+            print("comparable")
 
-    # next generation selection TODO change selection alg
-    combined_population = population + new_pop
-    combined_population_fitness = np.empty(populationSize + len(new_pop))
-    for i in range(0, populationSize):
-        combined_population_fitness[i] = population[i].fitness
-    for i in range(0, len(new_pop)):
-        combined_population_fitness[i + populationSize] = new_pop[i].fitness
-    for i in range(0, populationSize):
-        max_fitness_index = np.argmax(combined_population_fitness)
-        population[i] = combined_population[max_fitness_index]
-        combined_population_fitness[max_fitness_index] = 0
-
-    print("End Generation " + str(generation))
+    print("End Generation " + str(generation) +
+          " with population of:" + str(len(population)))
     generation += 1
 
-    # save out best of generation
-    with open('best_mask', 'wb') as output:
-        pickle.dump(population[0], output, -1)
-
-print("\nBest Mask: ")
-print("Fitness: " + f"{population[0].fitness:e}")  # <- sci-notation
-print("Accuracy: " + f"{population[0].accuracy:e}")  # <- sci-notation
-print("Change of the mask: %8.3f Number of shapes in the mask: %d" %
-      (population[0].change, len(population[0].shapes)))
+    # open file for pareto population
+    with open('pareto_pop', 'wb') as output:
+        pickle.dump(population, output, -1)
